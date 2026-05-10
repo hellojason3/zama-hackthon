@@ -1,0 +1,15 @@
+node_modules/
+.next/
+artifacts/
+cache/
+coverage/
+types/
+dist/
+tsconfig.tsbuildinfo
+.env
+.env.local
+.env.*.local
+deployments/localhost/
+.demo-logs/
+zk/qualified-investor/target/
+zk/qualified-investor/out/

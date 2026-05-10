@@ -1,0 +1,685 @@
+:root {
+  color-scheme: light;
+  --ink: #17201c;
+  --muted: #65706b;
+  --line: #dbe3df;
+  --panel: #ffffff;
+  --surface: #fbfcfb;
+  --bg: #f4f7f5;
+  --green: #12664f;
+  --green-soft: #dff3ea;
+  --blue: #1f5f99;
+  --amber: #9a6500;
+  --red: #9f3f45;
+}
+
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --ink: #e6eee9;
+  --muted: #9facaa;
+  --line: #30413b;
+  --panel: #18231f;
+  --surface: #101916;
+  --bg: #0c1210;
+  --green: #7ed8b7;
+  --green-soft: #17382d;
+  --blue: #8fbce9;
+  --amber: #e4b35c;
+  --red: #f09aa2;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+button,
+input,
+a {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.shell {
+  min-height: 100vh;
+  padding: 28px;
+}
+
+.topbar,
+.sectionHeader,
+.summaryGrid,
+.workspace,
+.buttonRow,
+.splitInputs,
+.topControls,
+.segmented {
+  display: flex;
+}
+
+.topbar {
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 22px;
+}
+
+.brandLockup {
+  align-items: center;
+  display: flex;
+  gap: 14px;
+  min-width: 0;
+}
+
+.brandLockup img {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  flex: 0 0 auto;
+  height: 56px;
+  object-fit: contain;
+  padding: 6px;
+  width: 56px;
+}
+
+.heroBrand {
+  align-items: flex-start;
+}
+
+.heroBrand img {
+  height: 82px;
+  width: 82px;
+}
+
+.topControls {
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.segmented {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  gap: 2px;
+  padding: 3px;
+}
+
+.segmented button {
+  background: transparent;
+  border: 0;
+  border-radius: 6px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 800;
+  min-height: 34px;
+  padding: 0 10px;
+}
+
+.segmented button.active {
+  background: var(--green);
+  color: #ffffff;
+}
+
+.eyebrow {
+  color: var(--green);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0;
+  margin: 0 0 5px;
+  text-transform: uppercase;
+}
+
+h1,
+h2 {
+  letter-spacing: 0;
+  margin: 0;
+}
+
+h1 {
+  font-size: 40px;
+  line-height: 1;
+}
+
+h2 {
+  font-size: 18px;
+}
+
+.primaryButton,
+.ghostButton {
+  align-items: center;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  display: inline-flex;
+  justify-content: center;
+  min-height: 42px;
+  padding: 0 16px;
+  font-weight: 750;
+}
+
+.primaryButton {
+  background: var(--green);
+  color: white;
+}
+
+.ghostButton {
+  background: var(--panel);
+  border-color: var(--line);
+  color: var(--ink);
+}
+
+.wide {
+  width: 100%;
+}
+
+.navButton {
+  min-width: 86px;
+}
+
+.summaryGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.metricPanel,
+.panel,
+.market,
+.rail,
+.logPanel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.metricPanel {
+  min-height: 118px;
+  padding: 18px;
+}
+
+.metricPanel span,
+.metricPanel small,
+.productCard small,
+label,
+.logPanel p,
+.notice {
+  color: var(--muted);
+}
+
+.metricPanel strong {
+  display: block;
+  font-size: 22px;
+  line-height: 1.15;
+  margin: 10px 0 8px;
+  overflow-wrap: anywhere;
+}
+
+.workspace {
+  align-items: flex-start;
+  gap: 18px;
+}
+
+.rail {
+  flex: 0 0 230px;
+  padding: 18px;
+  position: sticky;
+  top: 18px;
+}
+
+.step {
+  align-items: center;
+  display: flex;
+  gap: 10px;
+  min-height: 42px;
+}
+
+.stepDot {
+  align-items: center;
+  background: #edf2ef;
+  border-radius: 999px;
+  color: var(--muted);
+  display: inline-flex;
+  font-size: 13px;
+  font-weight: 800;
+  height: 26px;
+  justify-content: center;
+  width: 26px;
+}
+
+.stepDot.done {
+  background: var(--green-soft);
+  color: var(--green);
+}
+
+.notice {
+  border-top: 1px solid var(--line);
+  font-size: 13px;
+  line-height: 1.5;
+  margin-top: 12px;
+  padding-top: 14px;
+}
+
+.market {
+  flex: 1 1 auto;
+  padding: 18px;
+}
+
+.actions {
+  display: grid;
+  flex: 0 0 380px;
+  gap: 12px;
+}
+
+.sectionHeader {
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.sectionHeader.tight {
+  margin-bottom: 12px;
+}
+
+.productGrid {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.productCard {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: inherit;
+  min-height: 150px;
+  padding: 14px;
+  text-align: left;
+}
+
+.productCard.selected {
+  border-color: var(--green);
+  box-shadow: inset 0 0 0 1px var(--green);
+}
+
+.productCard strong {
+  display: block;
+  font-size: 16px;
+  line-height: 1.25;
+  margin: 12px 0 6px;
+}
+
+.status,
+.pill {
+  background: #eef0f2;
+  border-radius: 999px;
+  color: var(--blue);
+  display: inline-flex;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 5px 8px;
+}
+
+.statusActive,
+.pill.good {
+  background: var(--green-soft);
+  color: var(--green);
+}
+
+.apr {
+  color: var(--amber);
+  display: block;
+  font-size: 22px;
+  font-weight: 850;
+  margin-top: 14px;
+}
+
+.panel {
+  padding: 16px;
+}
+
+label {
+  display: grid;
+  font-size: 13px;
+  font-weight: 700;
+  gap: 7px;
+  margin-bottom: 12px;
+}
+
+input {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--ink);
+  min-height: 42px;
+  padding: 0 12px;
+  width: 100%;
+}
+
+.buttonRow,
+.splitInputs {
+  gap: 8px;
+}
+
+.buttonRow > button,
+.splitInputs > label {
+  flex: 1 1 0;
+}
+
+.handle {
+  background: color-mix(in srgb, var(--amber) 12%, var(--panel));
+  border: 1px solid color-mix(in srgb, var(--amber) 28%, var(--line));
+  border-radius: 8px;
+  color: var(--red);
+  display: block;
+  font-size: 12px;
+  line-height: 1.45;
+  margin-top: 12px;
+  min-height: 46px;
+  overflow-wrap: anywhere;
+  padding: 10px;
+  white-space: pre-wrap;
+}
+
+.logPanel {
+  margin-top: 18px;
+  padding: 18px;
+}
+
+.logPanel p {
+  border-top: 1px solid var(--line);
+  font-size: 14px;
+  margin: 0;
+  padding: 10px 0;
+}
+
+.docShell {
+  min-height: 100vh;
+  padding: 28px;
+}
+
+.docNav {
+  align-items: center;
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-bottom: 18px;
+}
+
+.docNav a {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 800;
+  min-height: 38px;
+  padding: 9px 14px;
+}
+
+.docHero,
+.slideHero {
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 24px;
+  max-width: 980px;
+  padding: 22px 0 28px;
+}
+
+.docHero h1,
+.slideHero h1 {
+  font-size: 48px;
+  line-height: 1.02;
+  margin-bottom: 12px;
+}
+
+.docHero p,
+.slideHero p {
+  color: var(--muted);
+  font-size: 18px;
+  line-height: 1.55;
+  margin: 0;
+  max-width: 760px;
+}
+
+.docQuickFacts {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-bottom: 24px;
+}
+
+.docQuickFacts div,
+.docBlock,
+.slideCard {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.docQuickFacts div {
+  min-height: 106px;
+  padding: 18px;
+}
+
+.docQuickFacts span {
+  color: var(--muted);
+  display: block;
+  font-size: 13px;
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+
+.docQuickFacts strong {
+  display: block;
+  font-size: 18px;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.docGrid {
+  align-items: start;
+  display: grid;
+  gap: 18px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.docColumn {
+  display: grid;
+  gap: 12px;
+}
+
+.docColumn > h2 {
+  font-size: 24px;
+  margin: 0 0 4px;
+}
+
+.docBlock {
+  padding: 18px;
+}
+
+.docBlock h3 {
+  font-size: 18px;
+  margin: 0 0 12px;
+}
+
+.docBlock p {
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.62;
+  margin: 0 0 10px;
+}
+
+.docBlock p:last-child {
+  margin-bottom: 0;
+}
+
+.slideShell {
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--green) 8%, transparent), transparent 48%),
+    var(--bg);
+}
+
+.slideDeck {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.slideCard {
+  min-height: 420px;
+  padding: 30px;
+  position: relative;
+}
+
+.slideNumber {
+  color: color-mix(in srgb, var(--green) 42%, var(--line));
+  font-size: 42px;
+  font-weight: 900;
+  line-height: 1;
+  position: absolute;
+  right: 24px;
+  top: 24px;
+}
+
+.slideCard h2 {
+  font-size: 34px;
+  line-height: 1.08;
+  margin: 58px 0 16px;
+  max-width: 620px;
+}
+
+.slideCard p {
+  color: var(--muted);
+  font-size: 18px;
+  line-height: 1.55;
+  margin: 0 0 22px;
+  max-width: 720px;
+}
+
+.slideCard ul {
+  display: grid;
+  gap: 10px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.slideCard li {
+  border-left: 3px solid var(--green);
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 750;
+  line-height: 1.45;
+  padding-left: 12px;
+}
+
+@media (max-width: 1180px) {
+  .summaryGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .docGrid,
+  .slideDeck {
+    grid-template-columns: 1fr;
+  }
+
+  .workspace {
+    flex-direction: column;
+  }
+
+  .rail,
+  .actions,
+  .market {
+    flex: none;
+    position: static;
+    width: 100%;
+  }
+
+  .rail {
+    display: grid;
+    gap: 8px;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+
+  .notice {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 720px) {
+  .shell {
+    padding: 16px;
+  }
+
+  .topbar,
+  .topControls,
+  .buttonRow,
+  .splitInputs {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  h1 {
+    font-size: 34px;
+  }
+
+  .brandLockup {
+    align-items: flex-start;
+  }
+
+  .brandLockup img {
+    height: 48px;
+    width: 48px;
+  }
+
+  .heroBrand img {
+    height: 64px;
+    width: 64px;
+  }
+
+  .summaryGrid,
+  .docQuickFacts,
+  .productGrid,
+  .rail {
+    grid-template-columns: 1fr;
+  }
+
+  .docShell {
+    padding: 16px;
+  }
+
+  .docHero h1,
+  .slideHero h1 {
+    font-size: 36px;
+  }
+
+  .slideCard {
+    min-height: 0;
+    padding: 22px;
+  }
+
+  .slideCard h2 {
+    font-size: 28px;
+  }
+}

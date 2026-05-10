@@ -1,0 +1,931 @@
+# Privyields - Confidential Qualified Yield Market
+
+## 1. Submission Target
+
+Build a runnable Zama Protocol dApp demo for the bounty submission.
+
+The submitted project must include:
+
+- Smart contracts.
+- Frontend dApp.
+- Clear project documentation.
+- A 2-minute pitch video.
+- A real FHE use case, not a mock privacy claim.
+
+Submission deadline from the announcement:
+
+- May 10, 23:59 AOE.
+- This is May 11, 19:59 in Malaysia time (UTC+8).
+
+Implementation status:
+
+- Contracts implemented under `contracts/`.
+- Deployment script implemented in `deploy/00_deploy_privyields.ts`.
+- Next.js dApp implemented under `app/` and `lib/`.
+- Arkworks BN254 Groth16 qualification prover implemented under `zk/qualified-investor`.
+- Solidity Groth16 registry shell implemented under `contracts/zk/Groth16QualifiedInvestorRegistry.sol`.
+- Generated Solidity verifier output is written to `contracts/zk/generated/QualifiedInvestorGroth16Verifier.sol` by `./zk-qualified-demo.sh`.
+- Frontend proof flow implemented through `/api/zk/prove`, issuer commitment registration, and on-chain `proveQualified`.
+- `./deploy-server.sh` now prepares Arkworks verifier assets and supports `DEPLOY_NETWORK=sepolia` for a Sepolia-wired frontend.
+- Current installed OpenZeppelin confidential package is `@openzeppelin/confidential-contracts@0.2.0`; it exposes `ConfidentialFungibleToken` / `ConfidentialFungibleTokenERC20Wrapper` rather than files named `ERC7984`. The product narrative still uses ERC-7984 as the confidential token standard direction, while the code follows the available package API.
+
+## 2. Product Definition
+
+Privyields is a private yield-product marketplace demo:
+
+- Users prove they are qualified investors with ZK, without revealing exact assets.
+- The app lists 10 mock yield products across treasury, real estate, staking, mining, credit, and DeFi strategies.
+- Users choose a yield product and deposit ERC-7984 confidential cUSDC.
+- Each product periodically publishes a public yield rate.
+- The vault computes each user's product shares and rewards with FHE.
+- Users decrypt only their own position and reward.
+
+One-line pitch:
+
+> ZK proves a user is qualified without revealing their wealth; ERC-7984 and FHE keep their yield allocations and rewards confidential.
+
+## 3. Core User Flow
+
+```text
+ZK asset threshold proof
+    |
+    | prove assets >= 1,000,000 USDC without revealing exact assets
+    v
+Qualified user
+    |
+    | choose one of 10 listed yield products
+    v
+MockUSDC (ERC-20)
+    |
+    | approve + wrap
+    v
+ConfidentialUSDC (ERC-7984 wrapper)
+    |
+    | confidentialTransferAndCall(encryptedAmount, productId)
+    v
+ConfidentialYieldVault (IConfidentialFungibleTokenReceiver)
+    |
+    | encrypted allocations by product + encrypted rewards by product
+    v
+User decrypts own position/reward through Relayer SDK + ACL
+```
+
+## 4. Why This Product Works
+
+The demo has three privacy layers with clear separation:
+
+1. ZK eligibility
+   - Proves the user has assets above a threshold.
+   - Does not reveal the exact asset amount.
+   - Used for qualified-investor access.
+
+2. ERC-7984 confidential asset layer
+   - Wraps public ERC-20 USDC into confidential cUSDC.
+   - cUSDC balances and transfer amounts are encrypted handles.
+   - `confidentialTransferAndCall` sends encrypted deposit amounts into the vault.
+
+3. FHE yield accounting
+   - Per-user product allocations are encrypted.
+   - Per-user product rewards are encrypted.
+   - Product yield rates are public.
+   - Reward computation uses encrypted shares directly.
+
+4. Vault custody model
+   - User funds are held by `ConfidentialYieldVault`.
+   - Yield products do not receive custody of funds in the MVP.
+   - Products are public strategy labels plus yield-rate publishers.
+   - The vault records encrypted allocations by `productId`.
+   - The vault pays encrypted cUSDC rewards from its own reward liquidity.
+
+Important honesty points:
+
+- `wrap()` receives a public ERC-20 amount, so the wrap transaction itself is not confidential.
+- The cUSDC balance and cUSDC-to-vault transfer amount are confidential after wrapping.
+- Product selection is public in the MVP because `productId` is sent in callback data.
+- The MVP is not anonymous and does not hide wallet addresses or timing.
+
+## 5. Bounty-Optimized Scope
+
+### P0: Must Ship
+
+This is the version to build before the deadline.
+
+- `MockUSDC`: demo ERC-20 with 6 decimals and faucet mint.
+- `ConfidentialUSDC`: OpenZeppelin confidential ERC-20 wrapper around `MockUSDC`.
+- `YieldProductMarket`: lists 10 mock yield products and lets managers publish yield rates.
+- `ConfidentialYieldVault`: receives encrypted cUSDC deposits by `productId`, records encrypted allocations/shares, computes encrypted rewards from product yield rates, and allows user decryption.
+- Next.js frontend with:
+  - yield product marketplace list,
+  - selected product detail,
+  - mint demo USDC,
+  - approve + wrap to cUSDC,
+  - encrypted cUSDC deposit into selected product,
+  - encrypted share/reward handles,
+  - user decryption for own product position/reward,
+  - encrypted reward claim through the vault,
+  - product manager panel for publishing product yield rates.
+
+P0 reward model:
+
+- Each yield product has a public `currentRateBps` and `currentRound`.
+- A user calls `accrueMyRewards(productId)`.
+- The vault computes:
+
+```solidity
+encryptedRewardIncrement =
+    encryptedUserProductShares * currentRateBps / 10_000;
+```
+
+This avoids needing a public `totalShares` denominator before the demo is stable. It still demonstrates the real FHE value: encrypted balances are used directly in reward arithmetic, and only the user can decrypt their reward.
+
+### P1: Asset Threshold ZK Proof
+
+Implemented as an Arkworks BN254 Groth16 qualified-investor proof:
+
+- User proves their attested portfolio balance is above a threshold, such as 1,000,000 USDC.
+- The proof reveals only that the threshold is met.
+- The proof does not reveal the user's exact balance.
+- The proof is separate from FHE accounting.
+- The vault or frontend can show a "Qualified" badge before allowing deposits.
+- The Next frontend calls `/api/zk/prove`, which runs the Rust prover and returns proof JSON.
+- `Groth16QualifiedInvestorRegistry` verifies the proof on-chain and stores the qualified wallet state.
+- Issuer/deployer commitment registration is still a demo attestation model, standing in for a real custodian or compliance issuer.
+- The setup is deterministic for repeatable hackathon builds and is not a production trusted setup ceremony.
+- The `circuits/` Circom sketch is design history; the connected demo path is Rust Arkworks under `zk/qualified-investor`.
+
+This is the only custom ZK scope for the MVP. We do not prove yield rate, live FHE ciphertext values, or exact reward balances with ZK.
+
+### P2: Protocol-Grade Yield Accounting If Time Allows
+
+Add epoch-level aggregate accounting:
+
+- Maintain `encryptedTotalShares[productId]`.
+- Snapshot a yield product epoch.
+- Mark only the aggregate snapshot as publicly decryptable.
+- Use Relayer public decryption and `FHE.checkSignatures`.
+- Compute `rewardPerShare = clearYield * SCALE / clearTotalShares`.
+- Use that scalar to update encrypted per-user rewards.
+
+This is more protocol-correct, but it adds public decryption flow complexity. It should not block the bounty submission.
+
+## 6. Custody and Allocation Model
+
+The MVP uses a vault-custody model:
+
+```text
+User cUSDC
+    |
+    | confidentialTransferAndCall(encryptedAmount, productId)
+    v
+ConfidentialYieldVault
+    |
+    | stores encryptedShares[productId][user]
+    | stores encryptedRewards[productId][user]
+    v
+User claims encrypted cUSDC reward from the vault
+```
+
+What products do:
+
+- `YieldProductMarket` lists products and metadata.
+- Product managers publish public yield rates.
+- Products are strategy labels in the MVP, not custody contracts.
+- Products do not receive user deposits directly.
+
+What the vault does:
+
+- Receives all encrypted cUSDC deposits.
+- Tracks which product the user allocated into.
+- Maintains encrypted user allocations per product.
+- Computes encrypted rewards per product.
+- Pays encrypted cUSDC rewards through `claimReward(productId)`.
+
+Why this is the right MVP tradeoff:
+
+- It keeps the demo focused on ZK eligibility, ERC-7984 assets, and FHE accounting.
+- It avoids building 10 separate ERC-7984 receiver contracts.
+- It avoids pretending to integrate real treasury, real estate, mining, staking, or DeFi strategies.
+- It makes the custody and claim path easy for judges to understand.
+
+Reward liquidity:
+
+- The vault must hold enough cUSDC to pay demo rewards.
+- In P0, the operator can pre-fund the vault with cUSDC reward liquidity.
+- A helper such as `fundRewards(euint64 amount)` can use the same encrypted transfer callback path or a separate operator transfer flow.
+- In production, each product could connect to real strategy adapters that return principal and yield to the vault.
+
+## 7. Claim Design
+
+Reward redemption uses a FHE-native payout path:
+
+- The vault already stores `encryptedRewards[productId][user]`.
+- User calls `claimReward(productId)`.
+- Vault transfers the encrypted reward amount back to the user in cUSDC.
+- The payout amount remains confidential.
+- No ZK reward proof is needed.
+- This avoids the unsolved problem of proving that a ZK witness equals the plaintext behind a FHE ciphertext.
+
+Sketch:
+
+```solidity
+function claimReward(uint256 productId) external {
+    euint64 reward = encryptedRewards[productId][msg.sender];
+    require(FHE.isInitialized(reward), "no reward");
+
+    encryptedRewards[productId][msg.sender] = FHE.asEuint64(0);
+    FHE.allowThis(encryptedRewards[productId][msg.sender]);
+    FHE.allow(encryptedRewards[productId][msg.sender], msg.sender);
+
+    FHE.allowTransient(reward, address(cUSDC));
+    cUSDC.confidentialTransfer(msg.sender, reward);
+}
+```
+
+Future research:
+
+- A future version may explore ZK proofs about FHE-derived values if Zama provides a sound and practical linking pattern.
+- That future design is intentionally out of scope for the bounty MVP.
+
+## 8. Privacy Model
+
+### Hidden
+
+- cUSDC balances.
+- cUSDC transfer amounts.
+- User allocation in each yield product.
+- User rewards in each yield product.
+- User-decrypted position/reward values, unless the user reveals them.
+- Exact asset amount used in the ZK qualification proof.
+
+### Public
+
+- Wallet addresses.
+- Transaction timing.
+- MockUSDC mint and wrap amounts.
+- Product selected for deposit.
+- Yield product metadata.
+- Product manager actions.
+- Published product yield rates.
+- Deposit count per product.
+- Reward rounds.
+
+### Not Claimed
+
+- Anonymous deposits.
+- Hidden product selection.
+- Hidden ERC-20 wrap amounts.
+- ZK proof of yield rate.
+- ZK proof of live FHE ciphertext values.
+- zk-proven FHE execution.
+- Real yield-source integrations.
+- Production KYC or compliance-grade attestations.
+
+## 9. Contract Design
+
+### 9.1 MockUSDC.sol
+
+Purpose:
+
+- Demo ERC-20 input asset.
+- Keep 6 decimals to match USDC and the ERC-7984 wrapper's preferred max decimals.
+
+Sketch:
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.27;
+
+import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+
+contract MockUSDC is ERC20 {
+    constructor() ERC20("Mock USDC", "USDC") {}
+
+    function decimals() public pure override returns (uint8) {
+        return 6;
+    }
+
+    function mint(address to, uint256 amount) external {
+        _mint(to, amount);
+    }
+}
+```
+
+### 9.2 ConfidentialUSDC.sol
+
+Purpose:
+
+- ERC-7984 confidential wrapper around `MockUSDC`.
+- Demonstrates ERC-20 -> confidential token conversion.
+
+Use OpenZeppelin `ConfidentialFungibleTokenERC20Wrapper`, which is the installed package's current confidential token wrapper implementation.
+
+Implemented API:
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.27;
+
+import {SepoliaConfig} from "@fhevm/solidity/config/ZamaConfig.sol";
+import {IERC20} from "@openzeppelin/contracts/interfaces/IERC20.sol";
+import {ConfidentialFungibleToken} from "@openzeppelin/confidential-contracts/token/ConfidentialFungibleToken.sol";
+import {ConfidentialFungibleTokenERC20Wrapper} from "@openzeppelin/confidential-contracts/token/extensions/ConfidentialFungibleTokenERC20Wrapper.sol";
+
+contract ConfidentialUSDC is SepoliaConfig, ConfidentialFungibleTokenERC20Wrapper {
+    constructor(IERC20 underlying)
+        ConfidentialFungibleToken("Confidential USDC", "cUSDC", "")
+        ConfidentialFungibleTokenERC20Wrapper(underlying)
+    {}
+}
+```
+
+### 9.3 YieldProductMarket.sol
+
+Purpose:
+
+- List 10 mock yield products.
+- Store public product metadata and yield rates.
+- Simulate periodic yield reporting.
+
+P0 state:
+
+```solidity
+struct YieldProduct {
+    string name;
+    string category;
+    address manager;
+    uint64 currentRateBps;
+    uint64 currentRound;
+    uint64 depositCount;
+    bool active;
+}
+
+YieldProduct[] public products;
+```
+
+Minimum functions:
+
+```solidity
+function productCount() external view returns (uint256);
+function getProduct(uint256 productId) external view returns (YieldProduct memory);
+function isActive(uint256 productId) external view returns (bool);
+function currentYield(uint256 productId) external view returns (uint64 round, uint64 rateBps);
+function publishYield(uint256 productId, uint64 rateBps) external;
+function recordDeposit(uint256 productId) external;
+function setVault(address vault) external onlyOwner;
+```
+
+Events:
+
+```solidity
+event ProductCreated(uint256 indexed productId, string name, string category, address indexed manager);
+event YieldPublished(uint256 indexed productId, uint64 indexed round, uint64 rateBps);
+event DepositRecorded(uint256 indexed productId, uint64 depositCount);
+```
+
+Suggested demo products:
+
+1. US Treasury Bill Ladder.
+2. Tokenized Real Estate Income.
+3. ETH Staking Yield.
+4. BTC Mining Revenue.
+5. RWA Private Credit.
+6. Stablecoin Basis Trade.
+7. DeFi Lending Prime.
+8. GPU Compute Revenue.
+9. Blue Chip Dividend Basket.
+10. Tokenized Money Market.
+
+Manager function:
+
+```solidity
+function publishYield(uint256 productId, uint64 rateBps) external onlyProductManager {
+    require(rateBps <= 10_000, "rate too high");
+
+    YieldProduct storage product = products[productId];
+    product.currentRateBps = rateBps;
+    product.currentRound += 1;
+
+    emit YieldPublished(productId, product.currentRound, rateBps);
+}
+```
+
+Notes:
+
+- `recordDeposit(productId)` must only be callable by `ConfidentialYieldVault`.
+- `rateBps > 10_000` should revert.
+- `depositCount` is a public activity counter, not TVL.
+- Do not display or fake product TVL in P0.
+
+### 9.4 ConfidentialYieldVault.sol
+
+Purpose:
+
+- Receive encrypted cUSDC deposits into selected yield products.
+- Mint encrypted product shares 1:1 with the encrypted transferred amount.
+- Accrue encrypted rewards from encrypted product shares and product yield rates.
+- Hold cUSDC principal and reward liquidity in one vault contract.
+- Grant ACL permissions for user decryption.
+
+P0 state:
+
+```solidity
+IConfidentialFungibleToken public immutable cUSDC;
+YieldProductMarket public immutable productMarket;
+ZKQualifiedInvestorRegistry public qualificationRegistry; // optional
+
+mapping(uint256 => mapping(address => euint64)) private encryptedShares;
+mapping(uint256 => mapping(address => euint64)) private encryptedRewards;
+mapping(uint256 => mapping(address => uint64)) public lastAccruedRound;
+```
+
+Deposit callback:
+
+```solidity
+function onConfidentialTransferReceived(
+    address,
+    address from,
+    euint64 amount,
+    bytes calldata data
+) external returns (ebool) {
+    require(msg.sender == address(cUSDC), "only cUSDC");
+
+    uint256 productId = abi.decode(data, (uint256));
+    require(productMarket.isActive(productId), "inactive product");
+
+    if (address(qualificationRegistry) != address(0)) {
+        require(qualificationRegistry.isQualified(from), "not qualified");
+    }
+
+    euint64 currentShares = FHE.isInitialized(encryptedShares[productId][from])
+        ? encryptedShares[productId][from]
+        : FHE.asEuint64(0);
+
+    encryptedShares[productId][from] = FHE.add(currentShares, amount);
+
+    FHE.allowThis(encryptedShares[productId][from]);
+    FHE.allow(encryptedShares[productId][from], from);
+
+    if (!FHE.isInitialized(encryptedRewards[productId][from])) {
+        encryptedRewards[productId][from] = FHE.asEuint64(0);
+        FHE.allowThis(encryptedRewards[productId][from]);
+        FHE.allow(encryptedRewards[productId][from], from);
+    }
+
+    productMarket.recordDeposit(productId);
+
+    return FHE.asEbool(true);
+}
+```
+
+Reward accrual:
+
+```solidity
+function accrueReward(address user, uint256 productId, uint64 periods) external onlyOwner {
+    Product memory product = productMarket.getProduct(productId);
+    require(product.active, "inactive product");
+    require(FHE.isInitialized(encryptedPrincipal[user][productId]), "no position");
+
+    euint64 increment = FHE.div(
+        FHE.mul(encryptedPrincipal[user][productId], uint64(product.currentAprBps) * periods),
+        10_000
+    );
+
+    encryptedRewards[user][productId] =
+        FHE.add(encryptedRewards[user][productId], increment);
+
+    FHE.allowThis(encryptedRewards[user][productId]);
+    FHE.allow(encryptedRewards[user][productId], user);
+}
+```
+
+View / decryption helper functions:
+
+```solidity
+function encryptedSharesOf(uint256 productId, address user) external view returns (euint64);
+function encryptedRewardsOf(uint256 productId, address user) external view returns (euint64);
+function allowMySharesDecryption(uint256 productId) external;
+function allowMyRewardsDecryption(uint256 productId) external;
+function claimReward(uint256 productId) external;
+```
+
+Notes:
+
+- Do not emit plaintext deposit amounts.
+- Do not maintain `totalTVL += amount` because `amount` is encrypted.
+- Do not fake `totalShares += 1` as TVL. If shown, call it `depositCount`.
+- Do not call `FHE.makePubliclyDecryptable` on user shares or rewards.
+- Use `confidentialTransferAndCall` for deposits so the vault receives the actual transferred encrypted amount.
+- Pre-fund reward liquidity at the vault level, not per product.
+- `claimReward` must save the old reward ciphertext handle, clear storage, grant transient allowance for the old handle, then transfer that old handle.
+
+### 9.5 ZKQualifiedInvestorRegistry.sol
+
+Purpose:
+
+- Let a user prove they have an attested balance above a threshold, without revealing the exact amount.
+- Keep ZK separate from FHE. ZK is used for eligibility; FHE is used for private yield-product accounting.
+
+ZK statement:
+
+> I know a private balance and salt such that my committed balance is included in an approved attestation Merkle root, and that balance is greater than or equal to the public threshold.
+
+Public inputs:
+
+```text
+root
+threshold
+userAddress
+nullifierHash
+```
+
+Private witness:
+
+```text
+balance
+salt
+merklePathElements
+merklePathIndices
+```
+
+Circuit logic:
+
+```text
+leaf = Poseidon(balance, salt, userAddress)
+verify leaf is included in root
+assert balance >= threshold
+nullifierHash = Poseidon(salt, userAddress)
+```
+
+Solidity shape:
+
+```solidity
+contract ZKQualifiedInvestorRegistry {
+    uint256 public constant MIN_BALANCE = 1_000_000e6;
+
+    mapping(bytes32 => bool) public validRoots;
+    mapping(bytes32 => bool) public usedNullifiers;
+    mapping(address => bool) public isQualified;
+
+    function addRoot(bytes32 root) external onlyOwner;
+
+    function proveQualified(
+        bytes calldata proof,
+        bytes32 root,
+        bytes32 nullifierHash
+    ) external {
+        require(validRoots[root], "invalid root");
+        require(!usedNullifiers[nullifierHash], "proof already used");
+
+        // Generated Groth16/Plonk verifier checks:
+        // root, MIN_BALANCE, msg.sender, nullifierHash.
+        verifier.verifyProof(proof, publicSignals);
+
+        usedNullifiers[nullifierHash] = true;
+        isQualified[msg.sender] = true;
+    }
+}
+```
+
+Hackathon simplification:
+
+- Use a small fixed Merkle tree in scripts.
+- Generate one Alice credential with balance `1_500_000e6`.
+- Generate one Bob credential with balance `200_000e6`.
+- Alice's proof passes; Bob's proof fails.
+- The proof does not reveal either exact balance.
+
+Fallback if full Circom/Groth16 is too slow:
+
+- Use a clearly labeled `MockQualifiedInvestorRegistry`.
+- Let owner mark Alice as qualified and Bob as not qualified.
+- Keep UI text honest: "Demo verifier mode".
+- Do not pass plaintext balances on-chain.
+- Do not claim the mock verifier is production ZK.
+
+## 10. Frontend Design
+
+The frontend should be one working app, not a marketing landing page.
+
+Main panels:
+
+1. Wallet and qualification
+   - Connect wallet.
+   - Load demo credential.
+   - Generate asset threshold proof.
+   - Submit proof to `ZKQualifiedInvestorRegistry`.
+   - Show "Qualified without revealing balance".
+
+2. Yield marketplace
+   - Display 10 yield products.
+   - Show public product name, category, latest yield rate, current round, deposit count.
+   - Select a product.
+
+3. Demo USDC and cUSDC
+   - Mint mock USDC.
+   - Approve cUSDC wrapper.
+   - Wrap USDC -> cUSDC.
+
+4. Confidential product deposit
+   - Enter local amount.
+   - Encrypt amount with Relayer SDK.
+   - Call `cUSDC.confidentialTransferAndCall(vault, handle, proof, abi.encode(productId))`.
+   - Show encrypted share handle for the selected product.
+
+5. Product manager panel
+   - Choose product.
+   - Publish new `rateBps`.
+   - Advance product round.
+
+6. Private product rewards
+   - Call `accrueMyRewards(productId)`.
+   - Fetch encrypted reward handle.
+   - Sign user decryption request.
+   - Run `userDecrypt`.
+   - Display the decrypted reward only in the browser.
+   - Call `claimReward(productId)` for encrypted cUSDC payout.
+
+Recommended demo state machine:
+
+```text
+wallet_disconnected
+ -> wallet_ready
+ -> qualification_pending
+ -> qualified
+ -> product_selected
+ -> mock_usdc_minted
+ -> wrapper_approved
+ -> cusdc_wrapped
+ -> deposit_amount_encrypted
+ -> encrypted_deposited
+ -> yield_published
+ -> reward_accrued
+ -> reward_decrypted
+ -> reward_claimed
+```
+
+Gating rules:
+
+- Disable transactions until wallet and network are ready.
+- Disable encrypted deposit until user is qualified, product is selected, and cUSDC is wrapped.
+- Allow deposits before yield is published, but disable reward accrual until a product round exists.
+- Disable reward decryption and claim until accrual succeeds.
+- After claim, show "encrypted cUSDC reward claimed" instead of a plaintext payout amount.
+
+Frontend technical notes:
+
+- Use `@zama-fhe/relayer-sdk`.
+- Initialize FHE SDK only client-side.
+- Use `createEncryptedInput(cUSDCAddress, userAddress)` for cUSDC transfer amounts.
+- Use `userDecrypt` for shares and rewards.
+- Keep `publicDecrypt` out of P0 unless P2 epoch accounting is implemented.
+
+## 11. Demo Script
+
+Suggested 2-minute pitch:
+
+1. 0:00-0:15 - Problem
+   - Yield platforms reveal eligibility, allocation sizes, and reward accrual.
+   - Qualified investors need private access and private yield allocation.
+
+2. 0:15-0:35 - Architecture
+   - ZK proves a user has over 1M USDC equivalent without revealing exact assets.
+   - ERC-20 USDC wraps into ERC-7984 cUSDC.
+   - Users choose from 10 yield products: treasury, real estate, staking, mining, credit, and DeFi.
+   - cUSDC deposits use encrypted transfer callbacks.
+   - Vault stores encrypted product allocations and rewards.
+
+3. 0:35-1:15 - Live demo
+   - Submit ZK threshold proof.
+   - Browse the yield product marketplace.
+   - Select a product.
+   - Mint and wrap mock USDC.
+   - Deposit an encrypted amount into the selected yield product.
+   - Show that the vault exposes handles and public metadata, not user position size.
+
+4. 1:15-1:40 - Yield demo
+   - Product manager publishes a product yield rate.
+   - User accrues reward.
+   - Reward is computed from encrypted product shares.
+
+5. 1:40-1:55 - Private decryption / claim
+   - User signs decryption request.
+   - Frontend decrypts only that user's reward.
+   - User claims encrypted cUSDC reward payout from the vault.
+
+6. 1:55-2:00 - Close
+   - "ZK gates qualified access, ERC-7984 standardizes confidential assets, and FHE keeps yield allocations and rewards private."
+
+## 12. Testing Checklist
+
+P0 contract tests:
+
+- `MockUSDC.mint` gives a user demo USDC.
+- User approves the cUSDC wrapper.
+- `ConfidentialUSDC.wrap` mints encrypted cUSDC.
+- `YieldProductMarket` initializes 10 products.
+- Product manager publishes a yield rate for a product.
+- Operator pre-funds reward liquidity in the vault.
+- User calls `confidentialTransferAndCall` into the vault with `productId`.
+- Vault callback is called only by cUSDC.
+- Vault stores encrypted shares under the selected product.
+- Vault grants ACL to itself and the user.
+- User calls `accrueMyRewards(productId)`.
+- User can decrypt their own product reward.
+- Another user cannot decrypt someone else's reward.
+- Double accrual in the same product round reverts.
+- `claimReward(productId)` transfers encrypted cUSDC reward.
+
+ZK checks:
+
+- Alice can prove balance above 1,000,000 USDC without revealing the exact balance.
+- Bob cannot prove the threshold with a lower attested balance.
+- The same nullifier cannot be reused.
+- The vault or UI recognizes `isQualified[user]`.
+
+Frontend checks:
+
+- Wallet connection works.
+- Relayer SDK initializes.
+- Yield product list renders 10 products.
+- Qualification proof status is visible.
+- Encrypted transfer input is generated.
+- Product deposit transaction succeeds.
+- Product yield publish transaction succeeds.
+- Reward accrual transaction succeeds.
+- Reward claim transaction succeeds.
+- User decryption succeeds after signature.
+- UI never displays plaintext shares/rewards before user decryption.
+
+## 13. Development Plan
+
+### Main Principle
+
+Build the shortest runnable path first:
+
+```text
+MockUSDC -> wrap cUSDC -> choose product -> encrypted deposit -> publish yield -> accrue encrypted reward -> decrypt own reward -> claim encrypted cUSDC
+```
+
+The ZK asset threshold proof can be developed in parallel and integrated as a gate once the core vault flow works.
+
+### Parallel Workstreams
+
+1. Contracts workstream
+   - Owns Solidity contracts and contract tests.
+   - First target: `MockUSDC`, `ConfidentialUSDC`, `YieldProductMarket`, `ConfidentialYieldVault`.
+   - Second target: `ZKQualifiedInvestorRegistry` verifier integration.
+   - Risk area: ERC-7984 wrapper and receiver callback interfaces must match the installed OpenZeppelin confidential contracts version.
+
+2. Frontend workstream
+   - Owns Next.js app, wallet connection, product list, transaction flows, and Relayer SDK integration.
+   - Can start with static contract addresses and mocked product data, then switch to deployed contract reads.
+   - Risk area: FHE SDK must initialize only client-side.
+
+3. ZK workstream
+   - Owns asset-threshold circuit, proof generation scripts, demo credentials, and verifier contract artifacts.
+   - Scope is only `balance >= 1_000_000e6`.
+   - Risk area: if circuit tooling takes too long, keep ZK as a clearly labeled mock proof flow and do not block FHE demo.
+
+4. Docs/demo workstream
+   - Owns README, architecture diagram, deployed addresses, and 2-minute video script.
+   - Starts early so the product story stays aligned with what is actually built.
+
+### Build Sequence
+
+Phase 1: Scaffold and dependency check
+
+- Choose Hardhat/fhEVM project structure.
+- Install Solidity, Zama fhEVM, Relayer SDK, OpenZeppelin confidential contracts, and frontend dependencies.
+- Confirm actual ERC-7984 wrapper and receiver interfaces from installed packages.
+- Create deployment config for local and Sepolia.
+
+Phase 2: Contract MVP without ZK gate
+
+- Implement `MockUSDC`.
+- Implement `ConfidentialUSDC`.
+- Implement `YieldProductMarket` with 10 products.
+- Implement `ConfidentialYieldVault` deposit callback, encrypted shares, reward accrual, user decryption permissions, and encrypted claim.
+- Add tests for deposit, accrual, decryption, and claim.
+
+Phase 3: Frontend MVP
+
+- Build the product marketplace screen.
+- Add wallet/network state.
+- Add mint, approve, wrap flow.
+- Add encrypted deposit flow.
+- Add manager yield publishing.
+- Add accrue, decrypt, and claim flow.
+
+Phase 4: ZK qualification
+
+- Implement or mock asset-threshold proof generation.
+- Add `ZKQualifiedInvestorRegistry`.
+- Add Alice and Bob demo credentials.
+- Add frontend qualification status.
+- Gate deposits only after the base deposit flow is stable.
+
+Phase 5: Integration and demo polish
+
+- Run full happy-path demo:
+  1. Alice proves qualification.
+  2. Alice wraps USDC into cUSDC.
+  3. Alice selects a yield product.
+  4. Alice deposits encrypted cUSDC.
+  5. Manager publishes a yield rate.
+  6. Alice accrues encrypted reward.
+  7. Alice decrypts her reward.
+  8. Alice claims encrypted cUSDC reward.
+- Add README and privacy limitations.
+- Record 2-minute video.
+
+### Cut Lines
+
+If time is tight, cut in this order:
+
+1. P2 epoch aggregate accounting.
+2. Real Sepolia deployment; keep local runnable demo with clear instructions.
+3. Full ZK circuit; keep a documented mock qualification flow.
+4. Encrypted claim; keep encrypted reward decryption as the FHE proof point.
+
+Do not cut:
+
+- ERC-7984 wrapper.
+- Encrypted deposit.
+- Encrypted shares/rewards.
+- User decryption of own reward.
+- Clear privacy-boundary documentation.
+
+## 14. Submission Checklist
+
+Required by the bounty:
+
+- Runnable dApp demo.
+- Smart contract source code.
+- Frontend source code.
+- Clear README.
+- 2-minute pitch video.
+- Submission form completed before deadline.
+
+Recommended README sections:
+
+- What it does.
+- Why it uses Zama.
+- Why it uses ZK.
+- ERC-7984 flow.
+- Yield marketplace flow.
+- Contracts and deployed addresses.
+- How to run locally.
+- How to use the demo.
+- Privacy model and limitations.
+- Future work.
+
+Artifacts to prepare:
+
+- GitHub repo link.
+- Frontend URL or local demo instructions.
+- Sepolia contract addresses if deployed.
+- Video link.
+- Short project description for the form.
+
+## 15. Judging Positioning
+
+Strongest angle:
+
+> Privyields is a private qualified-investor yield marketplace using ZK eligibility, ERC-7984 confidential assets, and fhEVM encrypted yield accounting.
+
+Technically credible claims:
+
+- Uses ZK for asset threshold eligibility without revealing exact wealth.
+- Uses ERC-7984 for the confidential asset layer.
+- Uses OpenZeppelin `ConfidentialFungibleTokenERC20Wrapper` for ERC-20 -> confidential token conversion.
+- Uses `confidentialTransferAndCall` to pass encrypted product deposit amounts into the vault.
+- Uses encrypted per-product shares and rewards for private accounting.
+- Uses a vault-custody model so products publish yield rates without directly custodying user funds in the MVP.
+- Uses ACL and Relayer SDK user decryption for selective disclosure.
+- Uses public product yield-rate simulation in P0 to avoid unsupported encrypted division.
+
+Avoid claiming:
+
+- Anonymous deposits.
+- Hidden product selection.
+- Hidden ERC-20 wrap amounts.
+- Real yield-source integrations.
+- Direct product-level custody.
+- Production KYC or compliance-grade ZK attestations.
+- ZK proof of yield rate.
+- ZK proof of live FHE ciphertext values.
+- zk-proven FHE execution.
+- Fully production-ready yield accounting.
+
+## 16. References
+
+- Zama Protocol overview: https://docs.zama.org/protocol
+- Zama FHE on blockchain architecture: https://docs.zama.org/protocol/protocol/overview
+- Zama Solidity guides: https://docs.zama.org/protocol/solidity-guides
+- Zama encrypted inputs: https://docs.zama.org/protocol/solidity-guides/smart-contract/inputs
+- Zama ACL guide: https://docs.zama.org/protocol/solidity-guides/smart-contract/acl
+- Zama Relayer SDK user decryption: https://docs.zama.org/protocol/relayer-sdk-guides/fhevm-relayer/decryption/user-decryption
+- Zama ERC-7984 example: https://docs.zama.org/protocol/examples/openzeppelin-confidential-contracts/erc7984
+- OpenZeppelin ERC-7984 docs: https://docs.openzeppelin.com/confidential-contracts/token
+- OpenZeppelin ERC-7984 API: https://docs.openzeppelin.com/confidential-contracts/api/token
+- OpenZeppelin confidential contracts: https://github.com/OpenZeppelin/openzeppelin-confidential-contracts
