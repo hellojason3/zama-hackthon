@@ -34,7 +34,7 @@ describe("Groth16 qualified investor registry", function () {
       await verifier.getAddress()
     )) as unknown as Groth16QualifiedInvestorRegistry;
 
-    await registry.registerCommitment(BigInt(fixture.commitment));
+    await registry.connect(alice).registerCommitment(BigInt(fixture.commitment));
 
     await expect(
       registry.connect(alice).proveQualified(

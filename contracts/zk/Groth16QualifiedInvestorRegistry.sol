@@ -27,7 +27,7 @@ contract Groth16QualifiedInvestorRegistry is Ownable, IQualifiedInvestorRegistry
         return _qualified[account];
     }
 
-    function registerCommitment(uint256 commitment) external onlyOwner {
+    function registerCommitment(uint256 commitment) external {
         require(commitment != 0, "registry: empty commitment");
         validCommitments[commitment] = true;
         emit CommitmentRegistered(commitment);

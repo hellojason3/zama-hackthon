@@ -95,7 +95,8 @@ const COPY = {
       productsBody:
         "These products appear after qualification. In this demo the same public list is shown to every qualified wallet; later this gate can map different asset tiers to different product sets.",
       qualifyTitle: "Prove investor qualification",
-      qualifyBody: "Generate a local asset-threshold proof and submit it to the registry before allocating capital.",
+      qualifyBody:
+        "Generate a local asset-threshold proof, self-register its demo commitment, and submit it to the registry before allocating capital.",
       alreadyQualified: "This wallet is already qualified in the registry, so a new proof is not required for this demo run.",
       mintTitle: "Mint demo USDC",
       mintBody:
@@ -233,7 +234,7 @@ const COPY = {
       insufficientMockUSDC: "Not enough mock USDC. Mint more demo USDC or lower the amount.",
       wrongNetwork: "Switch your wallet to Ethereum Sepolia before using encrypted allocation.",
       commitmentRegistration:
-        "This deployment requires the registry owner to register the proof commitment before submission. Connect the deployer wallet or ask the registry owner to register it."
+        "The demo registry could not register this proof commitment. Generate a fresh proof and try again."
     },
     progress: {
       preparingRelayer: "Preparing Zama relayer",
@@ -292,7 +293,7 @@ const COPY = {
       productsTitle: "选择一个收益产品",
       productsBody: "这些产品会在资格验证后展示。当前 demo 对所有通过资格的钱包展示同一组公开产品；后续可以根据不同资产等级展示不同产品集合。",
       qualifyTitle: "证明投资人资格",
-      qualifyBody: "先在本地生成资产门槛 proof，再提交到 registry，通过后才能配置资金。",
+      qualifyBody: "先在本地生成资产门槛 proof，公开登记 demo commitment，再提交到 registry，通过后才能配置资金。",
       alreadyQualified: "这个钱包已经在 registry 中通过资格验证，所以本次 demo 不需要重新提交 proof。",
       mintTitle: "铸造 demo USDC",
       mintBody: "新钱包通常没有 demo USDC。可以铸造 mock USDC 并授权 cUSDC wrapper；如果这个钱包已经跑过流程，也可以直接使用已有 demo USDC。",
@@ -427,7 +428,7 @@ const COPY = {
       requestDecrypt: "请先请求 reward 解密授权。",
       insufficientMockUSDC: "Mock USDC 余额不足。请铸造更多 demo USDC，或降低金额。",
       wrongNetwork: "请先把钱包切换到 Ethereum Sepolia，再执行加密配置。",
-      commitmentRegistration: "当前部署要求 registry owner 先登记 proof commitment。请连接部署钱包，或让 registry owner 先登记。"
+      commitmentRegistration: "Demo registry 无法登记这个 proof commitment。请重新生成 proof 后再试。"
     },
     progress: {
       preparingRelayer: "准备 Zama relayer",

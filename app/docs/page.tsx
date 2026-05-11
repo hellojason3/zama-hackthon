@@ -77,7 +77,8 @@ const englishSections = [
   {
     title: "Known Demo Boundaries",
     body: [
-      "The Groth16 verifier is real demo code, but issuer commitment registration is still a demo attestation model rather than a bank-grade credential process.",
+      "The Groth16 verifier is real demo code, but commitment registration is publicly callable in this hackathon deployment so fresh judge wallets can complete the flow without a separate issuer service.",
+      "A production version should replace public commitment registration with a bank, custodian, or compliance issuer attestation flow.",
       "The Arkworks setup is deterministic for repeatable demo builds. It is not a production trusted setup ceremony.",
       "The circuits directory is a legacy Circom design sketch; the connected verifier path is the Rust Arkworks implementation under zk/qualified-investor.",
       "MockUSDC is an intentionally open demo token. It is not real USDC, and the demo yield strategy does not model real-world custody, cashflow, or issuer risk.",
@@ -164,7 +165,8 @@ const chineseSections = [
   {
     title: "Demo 边界",
     body: [
-      "Groth16 verifier 已经是真实 demo 代码，但 issuer commitment registration 仍是 demo attestation model，不是银行级凭证流程。",
+      "Groth16 verifier 已经是真实 demo 代码，但当前 hackathon 部署把 commitment registration 做成公开调用，方便评委的新钱包不依赖单独 issuer service 也能完成流程。",
+      "生产版本应该把公开 commitment registration 替换成银行、托管方或合规发行方 attestation 流程。",
       "Arkworks setup 为了可重复 demo 构建使用确定性脚本生成，不是生产级 trusted setup ceremony。",
       "circuits 目录是早期 Circom 设计草案；当前真正接入的 verifier 路径是 zk/qualified-investor 下的 Rust Arkworks 实现。",
       "MockUSDC 是有意开放的 demo token，不是真实 USDC；demo yield strategy 也没有模拟真实世界的托管、现金流和发行方风险。",

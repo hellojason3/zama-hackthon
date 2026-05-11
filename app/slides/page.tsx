@@ -59,7 +59,7 @@ const slides = [
     kicker: "Boundaries",
     title: "Clear demo assumptions",
     body: "The proof system, confidential token flow, and encrypted accounting are real demo code. The credential process, mock USDC funding, and yield strategy custody remain intentionally simplified.",
-    points: ["Deterministic Arkworks setup for repeatable builds", "Issuer commitment registration is a demo attestation layer", "Production needs audited circuits, custody controls, and monitoring"]
+    points: ["Deterministic Arkworks setup for repeatable builds", "Public demo commitment registration for judge wallets", "Production needs issuer attestations, custody controls, and monitoring"]
   }
 ];
 
