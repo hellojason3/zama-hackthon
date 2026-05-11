@@ -22,7 +22,7 @@ const englishSections = [
       "ConfidentialUSDC wraps public USDC into an ERC-7984 confidential token rail using the Zama Ethereum configuration.",
       "QualifiedInvestorGroth16Verifier is generated from the Arkworks BN254 Groth16 circuit.",
       "Groth16QualifiedInvestorRegistry verifies the asset-threshold proof and stores qualified wallet state.",
-      "YieldProductMarket holds the product list, APR data, and vault relationship. Product listing is permissionless: any connected wallet can create a public product entry.",
+      "YieldProductMarket holds the product list, APR data, and vault relationship. Product listing and APR publishing are public in this hackathon deployment so fresh judge wallets can complete the reward flow.",
       "ConfidentialYieldVault receives encrypted deposits through cUSDC transfer-and-call, stores encrypted principal and encrypted rewards, and pays encrypted cUSDC claims. Its transfer callback explicitly grants the cUSDC contract transient access to the encrypted accept flag so ERC-7984 can complete the callback flow."
     ]
   },
@@ -79,6 +79,7 @@ const englishSections = [
     body: [
       "The Groth16 verifier is real demo code, but commitment registration is publicly callable in this hackathon deployment so fresh judge wallets can complete the flow without a separate issuer service.",
       "A production version should replace public commitment registration with a bank, custodian, or compliance issuer attestation flow.",
+      "APR publishing and user-triggered reward settlement are also self-serve demo affordances. Production should restrict these actions to product operators, strategy roles, or governed publishers.",
       "The Arkworks setup is deterministic for repeatable demo builds. It is not a production trusted setup ceremony.",
       "The circuits directory is a legacy Circom design sketch; the connected verifier path is the Rust Arkworks implementation under zk/qualified-investor.",
       "MockUSDC is an intentionally open demo token. It is not real USDC, and the demo yield strategy does not model real-world custody, cashflow, or issuer risk.",
@@ -110,7 +111,7 @@ const chineseSections = [
       "ConfidentialUSDC 使用 Zama Ethereum 配置，把公开 USDC 包装成 ERC-7984 confidential token，也就是 cUSDC。",
       "QualifiedInvestorGroth16Verifier 是从 Arkworks BN254 Groth16 circuit 导出的链上 verifier。",
       "Groth16QualifiedInvestorRegistry 验证资产门槛 proof，并记录钱包是否通过资格验证。",
-      "YieldProductMarket 管理收益产品列表、APR 数据和 vault 关系。产品发行是 permissionless 的：任意已连接钱包都可以创建公开产品条目。",
+      "YieldProductMarket 管理收益产品列表、APR 数据和 vault 关系。当前 hackathon 部署中，产品发行和 APR 发布都是公开调用，方便评委新钱包完成完整 reward 流程。",
       "ConfidentialYieldVault 通过 cUSDC transfer-and-call 接收加密存款，记录加密本金和加密收益，并支持用户提取加密 cUSDC。Vault 回调返回加密 accept flag 前，会给 cUSDC 合约临时授权，保证 ERC-7984 callback 流程可以完成。"
     ]
   },
@@ -167,6 +168,7 @@ const chineseSections = [
     body: [
       "Groth16 verifier 已经是真实 demo 代码，但当前 hackathon 部署把 commitment registration 做成公开调用，方便评委的新钱包不依赖单独 issuer service 也能完成流程。",
       "生产版本应该把公开 commitment registration 替换成银行、托管方或合规发行方 attestation 流程。",
+      "APR 发布和用户触发 reward 结算也是 demo 自助能力。生产环境应该把这些动作限制给产品运营方、策略角色或治理授权的 publisher。",
       "Arkworks setup 为了可重复 demo 构建使用确定性脚本生成，不是生产级 trusted setup ceremony。",
       "circuits 目录是早期 Circom 设计草案；当前真正接入的 verifier 路径是 zk/qualified-investor 下的 Rust Arkworks 实现。",
       "MockUSDC 是有意开放的 demo token，不是真实 USDC；demo yield strategy 也没有模拟真实世界的托管、现金流和发行方风险。",

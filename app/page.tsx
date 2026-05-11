@@ -105,8 +105,8 @@ const COPY = {
       wrapBody: "Convert the approved demo USDC into cUSDC so later actions can use encrypted handles.",
       depositTitle: "Encrypt and allocate capital",
       depositBody: "The deposit amount is encrypted locally before being sent to the selected product vault.",
-      yieldTitle: "Publish yield and accrue reward",
-      yieldBody: "For the demo, the operator action is exposed here so the complete reward flow is visible.",
+      yieldTitle: "Publish yield and settle reward",
+      yieldBody: "For the demo, APR publishing is public and each user can settle their own encrypted reward.",
       claimTitle: "Decrypt and claim your reward",
       claimBody: "Authorize user decryption for the reward handle, inspect your own reward, then claim confidential cUSDC.",
       completeTitle: "Demo flow complete",
@@ -159,7 +159,7 @@ const COPY = {
       },
       yield: {
         label: "Published yield",
-        detail: "The product operator publishes APR, and the vault accrues rewards with FHE arithmetic."
+        detail: "APR publishing is public for the demo, and the vault settles user rewards with FHE arithmetic."
       },
       claim: {
         label: "Encrypted claim",
@@ -204,7 +204,7 @@ const COPY = {
     encryptedDeposit: "Encrypted deposit",
     depositAmount: "Deposit amount",
     encryptDeposit: "Encrypt + Deposit",
-    publisher: "Publisher",
+    publisher: "Demo settlement",
     yieldUpdate: "Yield update",
     aprBps: "APR bps",
     periods: "Periods",
@@ -302,7 +302,7 @@ const COPY = {
       depositTitle: "加密并配置资金",
       depositBody: "存款金额会在本地加密，然后发送到选中的收益产品 vault。",
       yieldTitle: "发布收益率并结算 reward",
-      yieldBody: "为了让 demo 流程清晰，这里展示产品方发布 APR，并触发 vault 完成加密收益结算。",
+      yieldBody: "为了让 demo 可自助完成，APR 发布是公开的，并且用户可以为自己的仓位完成加密收益结算。",
       claimTitle: "解密并提取收益",
       claimBody: "授权 reward handle 给自己解密，查看自己的收益，然后提取 confidential cUSDC。",
       completeTitle: "Demo 流程完成",
@@ -355,7 +355,7 @@ const COPY = {
       },
       yield: {
         label: "收益发布",
-        detail: "产品方发布 APR，vault 使用 FHE 算术完成加密收益结算。"
+        detail: "Demo 中 APR 发布公开可调用，vault 使用 FHE 算术为用户结算加密收益。"
       },
       claim: {
         label: "加密提款",
@@ -399,7 +399,7 @@ const COPY = {
     encryptedDeposit: "加密存款",
     depositAmount: "存款金额",
     encryptDeposit: "加密 + 存入",
-    publisher: "发布方",
+    publisher: "Demo 结算",
     yieldUpdate: "收益更新",
     aprBps: "APR bps",
     periods: "周期",

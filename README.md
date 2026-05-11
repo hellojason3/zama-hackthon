@@ -23,7 +23,7 @@ Privyields is a hackathon dApp for private allocation into yield products. A use
 - `QualifiedInvestorGroth16Verifier`: generated BN254 Groth16 verifier exported from the Arkworks circuit.
 - `Groth16QualifiedInvestorRegistry`: verifies asset-threshold proofs and marks qualified wallets.
 - `MockQualifiedInvestorRegistry`: fallback demo registry used by legacy tests and mock-only flows.
-- `YieldProductMarket`: 10-product seed marketplace, permissionless product listing, and yield-rate publisher.
+- `YieldProductMarket`: 10-product seed marketplace, permissionless product listing, and public demo APR publisher.
 - `ConfidentialYieldVault`: confidential deposit receiver, encrypted principal/reward ledger, and encrypted cUSDC reward claims.
 
 The confidential asset rail uses encrypted balances, encrypted transfers, and transfer-and-call callback deposits. The current implementation is configured for Zama Sepolia through `ZamaEthereumConfig`.
@@ -51,7 +51,7 @@ The Next app is a guided production demo:
 - 10-product yield market plus permissionless product issuance
 - mint/approve/wrap cUSDC controls, with an option to skip minting when the wallet already has MockUSDC
 - encrypted deposit via Zama Relayer SDK with visible debug events
-- publisher APR update and encrypted reward settlement
+- public demo APR update and user-triggered encrypted reward settlement
 - reward decrypt, encrypted claim, final cUSDC balance decrypt, local balance history, and Etherscan transaction links
 
 Set these environment variables after deployment:
@@ -108,10 +108,11 @@ The script checks that the RPC is Sepolia and that the deployer has at least `MI
 - One-command server update: run `./deploy-server.sh`. The script syncs the repo to `zama-hackthon:~/privyields`, prepares Arkworks verifier assets, installs dependencies, compiles contracts, restarts the local demo chain, deploys contracts, writes `.env.local`, builds the Next app, and starts `next start` on port 3000 for Caddy to proxy.
 - Sepolia server update: run `npm run deploy:sepolia:production`. Contracts are deployed from the local machine using `DEPLOYER_PRIVATE_KEY`, then the server receives the deployment artifacts, frontend, prover binary, and proving keys. The frontend generates Groth16 proofs through `/api/zk/prove` and submits them to Sepolia with the connected wallet.
 - Product issuance is a direct on-chain transaction from the connected wallet. A separate Rust backend is not required unless the product marketplace later needs moderation, metadata hosting, indexing, or issuer reputation services.
+- APR publishing is also public in the hackathon deployment so judge wallets can complete the reward flow. In production this should move back to product operators, strategy roles, or governed publishers.
 - Sepolia demo funding does not require real USDC. `MockUSDC.mint` is part of the deployed demo, and the frontend can mint and approve during the guided flow. `DEMO_WALLET=0x... npm run mint:demo:sepolia` is still available for pre-funding.
 - Arkworks ZK path: run `./zk-qualified-demo.sh` to generate BN254 Groth16 proving/verifying keys, produce an asset-threshold proof, verify it locally in Rust, export a Solidity verifier, compile it, and enable the Groth16 registry test.
 - FHE transactions require the Zama Sepolia coprocessor contracts; use Sepolia for the live encrypted flow.
 - MetaMask cannot display cUSDC balances directly because cUSDC is confidential. Use the final page's `Decrypt cUSDC Balance` action to decrypt the connected wallet's cumulative confidential balance.
 - The balance history is browser-local. It stores encrypted cUSDC and reward handles after wrap, allocation, reward settlement, and claim. `Decrypt History` batch decrypts hidden rows with one wallet signature where possible.
-- The vault-custody model keeps funds in `ConfidentialYieldVault`. Products are strategy labels and rate publishers, not external custodians.
+- The vault-custody model keeps funds in `ConfidentialYieldVault`. Products are strategy labels and demo rate publishers, not external custodians.
 - Rewards are paid as encrypted cUSDC from the vault reserve for demo purposes.

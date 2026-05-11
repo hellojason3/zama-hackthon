@@ -88,10 +88,12 @@ contract ConfidentialYieldVault is ZamaEthereumConfig, IERC7984Receiver, Ownable
         return accepted;
     }
 
-    function accrueReward(address user, uint256 productId, uint64 periods) external onlyOwner {
+    function accrueReward(address user, uint256 productId, uint64 periods) external {
+        require(msg.sender == user || msg.sender == owner(), "vault: only user or owner");
         require(periods > 0, "vault: zero periods");
         require(periods <= MAX_REWARD_PERIODS, "vault: periods too high");
         require(FHE.isInitialized(_encryptedPrincipal[user][productId]), "vault: no position");
+        require(!_hasReward[user][productId], "vault: reward pending");
 
         YieldProductMarket.Product memory product = market.getProduct(productId);
         require(product.active, "vault: inactive product");

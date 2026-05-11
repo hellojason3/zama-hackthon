@@ -68,7 +68,7 @@ contract YieldProductMarket is Ownable {
         emit ProductStatusChanged(productId, active);
     }
 
-    function publishYieldRate(uint256 productId, uint16 aprBps) external onlyOwner {
+    function publishYieldRate(uint256 productId, uint16 aprBps) external {
         require(productId < productCount, "market: invalid product");
         require(aprBps <= MAX_APR_BPS, "market: apr too high");
 

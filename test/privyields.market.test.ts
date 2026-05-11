@@ -56,6 +56,17 @@ describe("Privyields market and qualification registry", function () {
     );
   });
 
+  it("allows any wallet to publish demo APR updates", async function () {
+    const [, alice] = await ethers.getSigners();
+    const Market = await ethers.getContractFactory("YieldProductMarket");
+    const market = (await Market.deploy()) as unknown as YieldProductMarket;
+
+    await expect(market.connect(alice).publishYieldRate(3, 650)).to.emit(market, "YieldRatePublished");
+
+    const product = await market.getProduct(3);
+    expect(product.currentAprBps).to.equal(650);
+  });
+
   it("stores demo proof qualification without publishing the private asset amount", async function () {
     const [, alice] = await ethers.getSigners();
     const Registry = await ethers.getContractFactory("MockQualifiedInvestorRegistry");
@@ -86,5 +97,21 @@ describe("Privyields market and qualification registry", function () {
 
     expect(await vault.MAX_REWARD_PERIODS()).to.equal(365n);
     await expect(vault.accrueReward(alice.address, 0, 366)).to.be.revertedWith("vault: periods too high");
+  });
+
+  it("keeps demo reward accrual restricted to the user or owner", async function () {
+    const [owner, alice, bob] = await ethers.getSigners();
+    const Market = await ethers.getContractFactory("YieldProductMarket");
+    const market = (await Market.deploy()) as unknown as YieldProductMarket;
+    const Registry = await ethers.getContractFactory("MockQualifiedInvestorRegistry");
+    const registry = (await Registry.deploy()) as unknown as MockQualifiedInvestorRegistry;
+    const Vault = await ethers.getContractFactory("ConfidentialYieldVault");
+    const vault = (await Vault.deploy(
+      owner.address,
+      await market.getAddress(),
+      await registry.getAddress()
+    )) as unknown as ConfidentialYieldVault;
+
+    await expect(vault.connect(bob).accrueReward(alice.address, 0, 1)).to.be.revertedWith("vault: only user or owner");
   });
 });
