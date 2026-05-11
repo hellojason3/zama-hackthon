@@ -11,6 +11,7 @@ WEB_PORT="${WEB_PORT:-3000}"
 RPC_HOST="${RPC_HOST:-127.0.0.1}"
 RPC_PORT="${RPC_PORT:-8545}"
 DEPLOY_NETWORK="${DEPLOY_NETWORK:-${1:-localhost}}"
+SKIP_CONTRACT_DEPLOY="${SKIP_CONTRACT_DEPLOY:-0}"
 PROVER_BIN="zk/qualified-investor/target/release/privyields-qualified-investor"
 
 SSH_BASE=(ssh -F "$SSH_CONFIG" -i "$REMOTE_IDENTITY" -o IdentitiesOnly=yes)
@@ -26,10 +27,16 @@ else
   echo "cargo is not installed locally; using the checked-in/generated Solidity verifier if present."
 fi
 
-if [ "$DEPLOY_NETWORK" != "localhost" ]; then
+if [ "$DEPLOY_NETWORK" != "localhost" ] && [ "$SKIP_CONTRACT_DEPLOY" != "1" ]; then
   echo "Deploying contracts to ${DEPLOY_NETWORK} from local machine"
   npx hardhat compile
   npx hardhat deploy --network "$DEPLOY_NETWORK"
+elif [ "$DEPLOY_NETWORK" != "localhost" ]; then
+  if [ ! -d "deployments/${DEPLOY_NETWORK}" ]; then
+    echo "Missing deployments/${DEPLOY_NETWORK}; cannot skip contract deployment."
+    exit 1
+  fi
+  echo "Skipping contract deployment; using existing deployments/${DEPLOY_NETWORK} artifacts"
 fi
 
 echo "Deploying Privyields to ${REMOTE_HOST} (${REMOTE_HOSTNAME})"
@@ -137,7 +144,9 @@ Sepolia frontend is using deployments/${DEPLOY_NETWORK} addresses.
 Sepolia contracts are deployed from the local machine before syncing artifacts to the server.
 Make sure the local machine has Hardhat vars or environment variables configured:
   DEPLOYER_PRIVATE_KEY or MNEMONIC
-  INFURA_API_KEY
+  SEPOLIA_RPC_URL, ALCHEMY_API_KEY, or INFURA_API_KEY
+If contracts are already deployed and deployments/${DEPLOY_NETWORK} is current, use:
+  SKIP_CONTRACT_DEPLOY=1 DEPLOY_NETWORK=${DEPLOY_NETWORK} ./deploy-server.sh
 REMOTE
 fi)
 

@@ -9,10 +9,12 @@ export const CONTRACTS = {
 
 export const REGISTRY_MODE = process.env.NEXT_PUBLIC_REGISTRY_MODE ?? "groth16";
 export const ZK_ASSET_THRESHOLD = process.env.NEXT_PUBLIC_ZK_ASSET_THRESHOLD ?? "1000000000000";
+export const CHAIN_NAME = process.env.NEXT_PUBLIC_CHAIN_NAME ?? "localhost";
 
 export const MOCK_USDC_ABI = [
   "function mint(address to,uint256 amount)",
   "function approve(address spender,uint256 amount) returns (bool)",
+  "function allowance(address owner,address spender) view returns (uint256)",
   "function balanceOf(address account) view returns (uint256)",
   "function decimals() view returns (uint8)"
 ] as const;
@@ -25,6 +27,7 @@ export const CUSDC_ABI = [
 
 export const MARKET_ABI = [
   "function getProducts() view returns (tuple(uint256 id,string name,string category,string issuer,uint16 currentAprBps,uint48 lastRateUpdate,bool active)[])",
+  "function listProduct(string name,string category,string issuer,uint16 aprBps) returns (uint256)",
   "function publishYieldRate(uint256 productId,uint16 aprBps)",
   "function depositCountByProduct(uint256 productId) view returns (uint64)"
 ] as const;

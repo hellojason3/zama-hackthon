@@ -1,6 +1,6 @@
 import {expect} from "chai";
 import {ethers} from "hardhat";
-import type {MockQualifiedInvestorRegistry, YieldProductMarket} from "../types";
+import type {ConfidentialYieldVault, MockQualifiedInvestorRegistry, YieldProductMarket} from "../types";
 
 describe("Privyields market and qualification registry", function () {
   it("lists the ten default product markets", async function () {
@@ -31,6 +31,31 @@ describe("Privyields market and qualification registry", function () {
     expect(await market.userDepositCount(alice.address, 0)).to.equal(1n);
   });
 
+  it("allows any wallet to list a yield product", async function () {
+    const [, alice] = await ethers.getSigners();
+    const Market = await ethers.getContractFactory("YieldProductMarket");
+    const market = (await Market.deploy()) as unknown as YieldProductMarket;
+
+    await expect(market.connect(alice).listProduct("Community Credit Pool", "Private Credit", "Alice Capital", 825))
+      .to.emit(market, "ProductListed")
+      .withArgs(10, "Community Credit Pool", "Private Credit", "Alice Capital");
+
+    expect(await market.productCount()).to.equal(11n);
+    const product = await market.getProduct(10);
+    expect(product.name).to.equal("Community Credit Pool");
+    expect(product.currentAprBps).to.equal(825);
+  });
+
+  it("rejects listed products above the APR cap", async function () {
+    const [, alice] = await ethers.getSigners();
+    const Market = await ethers.getContractFactory("YieldProductMarket");
+    const market = (await Market.deploy()) as unknown as YieldProductMarket;
+
+    await expect(market.connect(alice).listProduct("Invalid Pool", "Credit", "Alice", 10_001)).to.be.revertedWith(
+      "market: apr too high"
+    );
+  });
+
   it("stores demo proof qualification without publishing the private asset amount", async function () {
     const [, alice] = await ethers.getSigners();
     const Registry = await ethers.getContractFactory("MockQualifiedInvestorRegistry");
@@ -44,5 +69,22 @@ describe("Privyields market and qualification registry", function () {
       .withArgs(alice.address, proofCommitment, 1_000_000_000_000n);
 
     expect(await registry.isQualified(alice.address)).to.equal(true);
+  });
+
+  it("rejects reward accrual periods above the demo cap", async function () {
+    const [owner, alice] = await ethers.getSigners();
+    const Market = await ethers.getContractFactory("YieldProductMarket");
+    const market = (await Market.deploy()) as unknown as YieldProductMarket;
+    const Registry = await ethers.getContractFactory("MockQualifiedInvestorRegistry");
+    const registry = (await Registry.deploy()) as unknown as MockQualifiedInvestorRegistry;
+    const Vault = await ethers.getContractFactory("ConfidentialYieldVault");
+    const vault = (await Vault.deploy(
+      owner.address,
+      await market.getAddress(),
+      await registry.getAddress()
+    )) as unknown as ConfidentialYieldVault;
+
+    expect(await vault.MAX_REWARD_PERIODS()).to.equal(365n);
+    await expect(vault.accrueReward(alice.address, 0, 366)).to.be.revertedWith("vault: periods too high");
   });
 });

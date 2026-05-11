@@ -4,50 +4,62 @@ const slides = [
   {
     kicker: "Privyields",
     title: "Confidential Qualified Yield Market",
-    body: "A Zama-powered demo for private access control, encrypted allocation, encrypted reward accounting, and user-controlled disclosure.",
-    points: ["ZK proves qualification", "FHE protects allocation amounts", "cUSDC carries encrypted value"]
+    body: "A Zama-powered yield marketplace where a user proves they are qualified, allocates confidential cUSDC, receives encrypted rewards, and decrypts only their own results.",
+    points: ["ZK proves eligibility", "FHE protects allocation and reward amounts", "User-controlled disclosure at the end of the flow"]
   },
   {
     kicker: "Problem",
-    title: "Qualified yield access leaks too much",
-    body: "Traditional qualified-investor workflows reveal identity, wealth signals, allocation sizes, and portfolio movement across many operational systems.",
-    points: ["Qualification and allocation are usually coupled", "Sensitive balances become operational data", "Users lose control over what is disclosed"]
+    title: "Qualified yield access exposes too much",
+    body: "Private-market and qualified-investor workflows often expose wealth signals, position sizes, and portfolio movements to every operational system in the path.",
+    points: ["Eligibility checks reveal more than they need", "Allocation size becomes public operational data", "Reward history can expose strategy behavior"]
   },
   {
     kicker: "Solution",
     title: "Separate eligibility from private capital movement",
-    body: "Privyields keeps eligibility as a proof, then routes allocation and reward flows through confidential token handles.",
-    points: ["Asset threshold proof without publishing asset amount", "Encrypted deposit into selected yield products", "Encrypted rewards that only the user can decrypt"]
+    body: "Privyields keeps qualification as a one-time proof and then routes deposits, principal, rewards, and final balance checks through encrypted cUSDC handles.",
+    points: ["Asset-threshold proof without publishing the asset amount", "Encrypted deposit into a selected product vault", "Reward and balance decrypt only after user signature"]
+  },
+  {
+    kicker: "Experience",
+    title: "A guided demo instead of a dense dashboard",
+    body: "The frontend is now a step-by-step wizard: intro, wallet, product selection, qualification, mint, wrap, allocation, yield, claim, and final cUSDC balance decrypt.",
+    points: ["One task per screen", "Visible progress and debug events", "Final proof that the claimed reward reached the confidential balance"]
   },
   {
     kicker: "Architecture",
     title: "Five on-chain building blocks",
-    body: "The demo composes a mock USDC rail, a confidential cUSDC wrapper, a qualification registry, a yield product market, and a confidential vault.",
-    points: ["MockUSDC for demo funding", "ConfidentialUSDC for encrypted balances", "ConfidentialYieldVault for private principal and reward state"]
-  },
-  {
-    kicker: "User Flow",
-    title: "From proof to encrypted claim",
-    body: "A user proves qualification, wraps public demo USDC into cUSDC, encrypts a deposit amount, routes it to a product, decrypts their own reward, and claims cUSDC.",
-    points: ["Submit demo ZK commitment", "Encrypt deposit with Zama Relayer SDK", "Request and perform user decrypt for reward"]
+    body: "The demo composes a public mock USDC, a Zama ERC-7984 cUSDC wrapper, a Groth16 qualification registry, a permissionless product market, and a confidential yield vault.",
+    points: ["MockUSDC funds fresh demo wallets", "ConfidentialUSDC stores encrypted balances", "ConfidentialYieldVault stores encrypted principal and rewards"]
   },
   {
     kicker: "Market",
-    title: "Ten yield product lanes",
-    body: "The app presents a multi-product marketplace: T-bills, tokenized real estate, staking, mining cashflow, private credit, basis strategies, DeFi credit, compute revenue, equities, and money markets.",
-    points: ["Product metadata is public", "User amount remains confidential", "APR updates can be published by the strategy operator"]
+    title: "Public products, private allocation",
+    body: "Any connected wallet can issue a product entry. Product names, categories, issuers, and APR updates are public, while each user's allocation amount remains encrypted.",
+    points: ["Permissionless product issuance", "Public marketplace discovery", "Confidential user position sizes"]
+  },
+  {
+    kicker: "Live Flow",
+    title: "From proof to confidential claim",
+    body: "A user generates a Groth16 asset-threshold proof, mints mock USDC, wraps it into cUSDC, encrypts a deposit, accrues a reward, decrypts the reward handle, and claims cUSDC.",
+    points: ["Sepolia wallet signs every live step", "Zama Relayer SDK encrypts deposit input", "User decrypt reveals only the user's own reward"]
+  },
+  {
+    kicker: "Balance",
+    title: "MetaMask cannot show confidential cUSDC",
+    body: "cUSDC balances are encrypted handles, not public ERC-20 balanceOf values. The final page decrypts the user's own cUSDC balance and browser-recorded history after wallet signatures.",
+    points: ["MetaMask shows ETH and mock USDC", "The dApp decrypts current balance with Zama user decrypt", "History handles can be batch decrypted with one signature"]
   },
   {
     kicker: "Demo Scope",
-    title: "Built for a live hackathon demo",
-    body: "The current deployment runs a production Next.js frontend behind Caddy, with demo contracts and local-server mode for fast iteration.",
-    points: ["Next production server on privyields.xyz", "Server-local Hardhat demo chain", "Sepolia path documented for live FHE flow"]
+    title: "Built for Sepolia and recorded demos",
+    body: "The current deployment runs a production Next.js app behind Caddy at privyields.xyz, wired to Sepolia contracts and Zama's Sepolia FHE configuration.",
+    points: ["Production Next.js build, not npm dev", "Config page shows deployed contract addresses", "Frontend-only redeploy is available for UI updates"]
   },
   {
-    kicker: "Next Steps",
-    title: "Move from demo to production architecture",
-    body: "The roadmap is to replace the demo registry with a real verifier, deploy to Sepolia or mainnet-compatible environments, and harden strategy custody and publishing permissions.",
-    points: ["Wire production ZK verifier", "Use live Zama Sepolia coprocessor contracts", "Add operational monitoring and permissioning"]
+    kicker: "Boundaries",
+    title: "Clear demo assumptions",
+    body: "The proof system, confidential token flow, and encrypted accounting are real demo code. The credential process, mock USDC funding, and yield strategy custody remain intentionally simplified.",
+    points: ["Deterministic Arkworks setup for repeatable builds", "Issuer commitment registration is a demo attestation layer", "Production needs audited circuits, custody controls, and monitoring"]
   }
 ];
 
@@ -57,6 +69,7 @@ export default function SlidesPage() {
       <nav className="docNav">
         <Link href="/">App</Link>
         <Link href="/docs">Docs</Link>
+        <Link href="/config">Config</Link>
       </nav>
 
       <section className="slideHero">
@@ -66,7 +79,7 @@ export default function SlidesPage() {
             <p className="eyebrow">Project Slides / 项目介绍</p>
             <h1>Privyields</h1>
             <p>
-              Confidential Qualified Yield Market built with Zama. Scroll through the deck directly in the browser.
+              Confidential qualified-yield marketplace built with Zama. Scroll through the browser deck for the live demo story.
             </p>
           </div>
         </div>

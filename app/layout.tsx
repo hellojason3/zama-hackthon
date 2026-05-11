@@ -2,6 +2,7 @@ import type {Metadata} from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://privyields.xyz"),
   title: "Privyields",
   description: "Confidential Qualified Yield Market built with Zama",
   icons: {

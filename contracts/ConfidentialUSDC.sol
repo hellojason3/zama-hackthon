@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.27;
 
-import {SepoliaConfig} from "@fhevm/solidity/config/ZamaConfig.sol";
+import {ZamaEthereumConfig} from "@fhevm/solidity/config/ZamaConfig.sol";
 import {IERC20} from "@openzeppelin/contracts/interfaces/IERC20.sol";
-import {ConfidentialFungibleToken} from "@openzeppelin/confidential-contracts/token/ConfidentialFungibleToken.sol";
-import {ConfidentialFungibleTokenERC20Wrapper} from "@openzeppelin/confidential-contracts/token/extensions/ConfidentialFungibleTokenERC20Wrapper.sol";
+import {ERC7984} from "@openzeppelin/confidential-contracts/token/ERC7984/ERC7984.sol";
+import {ERC7984ERC20Wrapper} from "@openzeppelin/confidential-contracts/token/ERC7984/extensions/ERC7984ERC20Wrapper.sol";
 
-contract ConfidentialUSDC is SepoliaConfig, ConfidentialFungibleTokenERC20Wrapper {
+contract ConfidentialUSDC is ZamaEthereumConfig, ERC7984ERC20Wrapper {
     constructor(IERC20 underlying)
-        ConfidentialFungibleToken("Confidential USDC", "cUSDC", "")
-        ConfidentialFungibleTokenERC20Wrapper(underlying)
+        ERC7984("Confidential USDC", "cUSDC", "")
+        ERC7984ERC20Wrapper(underlying)
     {}
 }

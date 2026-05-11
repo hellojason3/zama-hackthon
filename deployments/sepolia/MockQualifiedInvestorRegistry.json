@@ -1,0 +1,299 @@
+{
+  "address": "0x50d4228bee834C6619aA949a55a527AfC357B440",
+  "abi": [
+    {
+      "inputs": [],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        }
+      ],
+      "name": "OwnableInvalidOwner",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "OwnableUnauthorizedAccount",
+      "type": "error"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "proofCommitment",
+          "type": "bytes32"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint64",
+          "name": "threshold",
+          "type": "uint64"
+        }
+      ],
+      "name": "DemoProofAccepted",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "previousOwner",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "OwnershipTransferred",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "bool",
+          "name": "qualified",
+          "type": "bool"
+        }
+      ],
+      "name": "QualificationSet",
+      "type": "event"
+    },
+    {
+      "inputs": [],
+      "name": "QUALIFIED_ASSET_THRESHOLD_USDC",
+      "outputs": [
+        {
+          "internalType": "uint64",
+          "name": "",
+          "type": "uint64"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "isQualified",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "owner",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "renounceOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        },
+        {
+          "internalType": "bool",
+          "name": "qualified",
+          "type": "bool"
+        }
+      ],
+      "name": "setQualified",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "proofCommitment",
+          "type": "bytes32"
+        }
+      ],
+      "name": "submitDemoProof",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "transferOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "transactionHash": "0x688e67063a9845a927267cdcbdc904141bfc29f6884b2c4d4091355f3858c9a2",
+  "receipt": {
+    "to": null,
+    "from": "0x5780a0a8af33407b7D503AB0BEB4a4926AF07ea0",
+    "contractAddress": "0x50d4228bee834C6619aA949a55a527AfC357B440",
+    "transactionIndex": 105,
+    "gasUsed": "288866",
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000800000000000000000000000000000000000000000000000000000000000000000000000000000008000000000000000000000000000000001000000000000000000000000000000000000020000000000000000000800008000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000008000000000000000220000000000000000000000000000000000000000000000000000000000100000004",
+    "blockHash": "0xb4923661d8b27f9de6dcdd8eee6c4799275887a01fadb5090c04ed22ebf0bc28",
+    "transactionHash": "0x688e67063a9845a927267cdcbdc904141bfc29f6884b2c4d4091355f3858c9a2",
+    "logs": [
+      {
+        "transactionIndex": 105,
+        "blockNumber": 10830362,
+        "transactionHash": "0x688e67063a9845a927267cdcbdc904141bfc29f6884b2c4d4091355f3858c9a2",
+        "address": "0x50d4228bee834C6619aA949a55a527AfC357B440",
+        "topics": [
+          "0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0",
+          "0x0000000000000000000000000000000000000000000000000000000000000000",
+          "0x0000000000000000000000005780a0a8af33407b7d503ab0beb4a4926af07ea0"
+        ],
+        "data": "0x",
+        "logIndex": 425,
+        "blockHash": "0xb4923661d8b27f9de6dcdd8eee6c4799275887a01fadb5090c04ed22ebf0bc28"
+      }
+    ],
+    "blockNumber": 10830362,
+    "cumulativeGasUsed": "19252074",
+    "status": 1,
+    "byzantium": true
+  },
+  "args": [],
+  "numDeployments": 1,
+  "solcInputHash": "d320ba4fc4f5de5c9e1f27e07f4cabea",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.27+commit.40a35a09\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"}],\"name\":\"OwnableInvalidOwner\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"OwnableUnauthorizedAccount\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"proofCommitment\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"threshold\",\"type\":\"uint64\"}],\"name\":\"DemoProofAccepted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"bool\",\"name\":\"qualified\",\"type\":\"bool\"}],\"name\":\"QualificationSet\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"QUALIFIED_ASSET_THRESHOLD_USDC\",\"outputs\":[{\"internalType\":\"uint64\",\"name\":\"\",\"type\":\"uint64\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"isQualified\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"renounceOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"internalType\":\"bool\",\"name\":\"qualified\",\"type\":\"bool\"}],\"name\":\"setQualified\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"proofCommitment\",\"type\":\"bytes32\"}],\"name\":\"submitDemoProof\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"errors\":{\"OwnableInvalidOwner(address)\":[{\"details\":\"The owner is not a valid owner account. (eg. `address(0)`)\"}],\"OwnableUnauthorizedAccount(address)\":[{\"details\":\"The caller account is not authorized to perform an operation.\"}]},\"kind\":\"dev\",\"methods\":{\"owner()\":{\"details\":\"Returns the address of the current owner.\"},\"renounceOwnership()\":{\"details\":\"Leaves the contract without owner. It will not be possible to call `onlyOwner` functions. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby disabling any functionality that is only available to the owner.\"},\"transferOwnership(address)\":{\"details\":\"Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner.\"}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/MockQualifiedInvestorRegistry.sol\":\"MockQualifiedInvestorRegistry\"},\"evmVersion\":\"cancun\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"none\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":true,\"runs\":800},\"remappings\":[]},\"sources\":{\"@openzeppelin/contracts/access/Ownable.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts (last updated v5.0.0) (access/Ownable.sol)\\n\\npragma solidity ^0.8.20;\\n\\nimport {Context} from \\\"../utils/Context.sol\\\";\\n\\n/**\\n * @dev Contract module which provides a basic access control mechanism, where\\n * there is an account (an owner) that can be granted exclusive access to\\n * specific functions.\\n *\\n * The initial owner is set to the address provided by the deployer. This can\\n * later be changed with {transferOwnership}.\\n *\\n * This module is used through inheritance. It will make available the modifier\\n * `onlyOwner`, which can be applied to your functions to restrict their use to\\n * the owner.\\n */\\nabstract contract Ownable is Context {\\n    address private _owner;\\n\\n    /**\\n     * @dev The caller account is not authorized to perform an operation.\\n     */\\n    error OwnableUnauthorizedAccount(address account);\\n\\n    /**\\n     * @dev The owner is not a valid owner account. (eg. `address(0)`)\\n     */\\n    error OwnableInvalidOwner(address owner);\\n\\n    event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);\\n\\n    /**\\n     * @dev Initializes the contract setting the address provided by the deployer as the initial owner.\\n     */\\n    constructor(address initialOwner) {\\n        if (initialOwner == address(0)) {\\n            revert OwnableInvalidOwner(address(0));\\n        }\\n        _transferOwnership(initialOwner);\\n    }\\n\\n    /**\\n     * @dev Throws if called by any account other than the owner.\\n     */\\n    modifier onlyOwner() {\\n        _checkOwner();\\n        _;\\n    }\\n\\n    /**\\n     * @dev Returns the address of the current owner.\\n     */\\n    function owner() public view virtual returns (address) {\\n        return _owner;\\n    }\\n\\n    /**\\n     * @dev Throws if the sender is not the owner.\\n     */\\n    function _checkOwner() internal view virtual {\\n        if (owner() != _msgSender()) {\\n            revert OwnableUnauthorizedAccount(_msgSender());\\n        }\\n    }\\n\\n    /**\\n     * @dev Leaves the contract without owner. It will not be possible to call\\n     * `onlyOwner` functions. Can only be called by the current owner.\\n     *\\n     * NOTE: Renouncing ownership will leave the contract without an owner,\\n     * thereby disabling any functionality that is only available to the owner.\\n     */\\n    function renounceOwnership() public virtual onlyOwner {\\n        _transferOwnership(address(0));\\n    }\\n\\n    /**\\n     * @dev Transfers ownership of the contract to a new account (`newOwner`).\\n     * Can only be called by the current owner.\\n     */\\n    function transferOwnership(address newOwner) public virtual onlyOwner {\\n        if (newOwner == address(0)) {\\n            revert OwnableInvalidOwner(address(0));\\n        }\\n        _transferOwnership(newOwner);\\n    }\\n\\n    /**\\n     * @dev Transfers ownership of the contract to a new account (`newOwner`).\\n     * Internal function without access restriction.\\n     */\\n    function _transferOwnership(address newOwner) internal virtual {\\n        address oldOwner = _owner;\\n        _owner = newOwner;\\n        emit OwnershipTransferred(oldOwner, newOwner);\\n    }\\n}\\n\",\"keccak256\":\"0xff6d0bb2e285473e5311d9d3caacb525ae3538a80758c10649a4d61029b017bb\",\"license\":\"MIT\"},\"@openzeppelin/contracts/utils/Context.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts (last updated v5.0.1) (utils/Context.sol)\\n\\npragma solidity ^0.8.20;\\n\\n/**\\n * @dev Provides information about the current execution context, including the\\n * sender of the transaction and its data. While these are generally available\\n * via msg.sender and msg.data, they should not be accessed in such a direct\\n * manner, since when dealing with meta-transactions the account sending and\\n * paying for execution may not be the actual sender (as far as an application\\n * is concerned).\\n *\\n * This contract is only required for intermediate, library-like contracts.\\n */\\nabstract contract Context {\\n    function _msgSender() internal view virtual returns (address) {\\n        return msg.sender;\\n    }\\n\\n    function _msgData() internal view virtual returns (bytes calldata) {\\n        return msg.data;\\n    }\\n\\n    function _contextSuffixLength() internal view virtual returns (uint256) {\\n        return 0;\\n    }\\n}\\n\",\"keccak256\":\"0x493033a8d1b176a037b2cc6a04dad01a5c157722049bbecf632ca876224dd4b2\",\"license\":\"MIT\"},\"contracts/MockQualifiedInvestorRegistry.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity ^0.8.27;\\n\\nimport {Ownable} from \\\"@openzeppelin/contracts/access/Ownable.sol\\\";\\nimport {IQualifiedInvestorRegistry} from \\\"./interfaces/IQualifiedInvestorRegistry.sol\\\";\\n\\ncontract MockQualifiedInvestorRegistry is Ownable, IQualifiedInvestorRegistry {\\n    uint64 public constant QUALIFIED_ASSET_THRESHOLD_USDC = 1_000_000e6;\\n\\n    mapping(address account => bool qualified) private _qualified;\\n\\n    event DemoProofAccepted(address indexed account, bytes32 indexed proofCommitment, uint64 threshold);\\n    event QualificationSet(address indexed account, bool qualified);\\n\\n    constructor() Ownable(msg.sender) {}\\n\\n    function isQualified(address account) external view returns (bool) {\\n        return _qualified[account];\\n    }\\n\\n    function submitDemoProof(bytes32 proofCommitment) external {\\n        require(proofCommitment != bytes32(0), \\\"registry: empty proof\\\");\\n        _qualified[msg.sender] = true;\\n        emit DemoProofAccepted(msg.sender, proofCommitment, QUALIFIED_ASSET_THRESHOLD_USDC);\\n    }\\n\\n    function setQualified(address account, bool qualified) external onlyOwner {\\n        _qualified[account] = qualified;\\n        emit QualificationSet(account, qualified);\\n    }\\n}\\n\",\"keccak256\":\"0xb5cf16a270b2b4d971fc03187d2bfade2cf2809115e4a9421d630498b48daa31\",\"license\":\"MIT\"},\"contracts/interfaces/IQualifiedInvestorRegistry.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity ^0.8.27;\\n\\ninterface IQualifiedInvestorRegistry {\\n    function isQualified(address account) external view returns (bool);\\n}\\n\",\"keccak256\":\"0x9773b014d394063dc2feb5e5a0cecdb665808a003e42fc65b33e1da26621ad55\",\"license\":\"MIT\"}},\"version\":1}",
+  "bytecode": "0x6080604052348015600e575f5ffd5b503380603357604051631e4fbdf760e01b81525f600482015260240160405180910390fd5b603a81603f565b50608e565b5f80546001600160a01b038381166001600160a01b0319831681178455604051919092169283917f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e09190a35050565b6103cc8061009b5f395ff3fe608060405234801561000f575f5ffd5b506004361061007a575f3560e01c8063a421d66811610058578063a421d668146100cc578063ac0cbb5a14610107578063f2fde38b1461011a578063fc911f791461012d575f5ffd5b8063715018a61461007e5780638da5cb5b14610088578063912715f5146100a7575b5f5ffd5b610086610140565b005b5f546040516001600160a01b0390911681526020015b60405180910390f35b6100b364e8d4a5100081565b60405167ffffffffffffffff909116815260200161009e565b6100f76100da36600461034f565b6001600160a01b03165f9081526001602052604090205460ff1690565b604051901515815260200161009e565b61008661011536600461036f565b610153565b61008661012836600461034f565b6101b9565b61008661013b3660046103a8565b6101fb565b6101486102a1565b6101515f6102cd565b565b61015b6102a1565b6001600160a01b0382165f81815260016020908152604091829020805460ff191685151590811790915591519182527f3cc9f1ed63c2a4de331f0acb481e70b0fc6727fefa016fc4154974be98596510910160405180910390a25050565b6101c16102a1565b6001600160a01b0381166101ef57604051631e4fbdf760e01b81525f60048201526024015b60405180910390fd5b6101f8816102cd565b50565b806102485760405162461bcd60e51b815260206004820152601560248201527f72656769737472793a20656d7074792070726f6f66000000000000000000000060448201526064016101e6565b335f81815260016020818152604092839020805460ff1916909217909155905164e8d4a5100081528392917f3e3ca04cf494bc20e6393895aff9dc423ba7dc95c235da04156c1a20ee95b27d910160405180910390a350565b5f546001600160a01b031633146101515760405163118cdaa760e01b81523360048201526024016101e6565b5f80546001600160a01b038381167fffffffffffffffffffffffff0000000000000000000000000000000000000000831681178455604051919092169283917f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e09190a35050565b80356001600160a01b038116811461034a575f5ffd5b919050565b5f6020828403121561035f575f5ffd5b61036882610334565b9392505050565b5f5f60408385031215610380575f5ffd5b61038983610334565b91506020830135801515811461039d575f5ffd5b809150509250929050565b5f602082840312156103b8575f5ffd5b503591905056fea164736f6c634300081b000a",
+  "deployedBytecode": "0x608060405234801561000f575f5ffd5b506004361061007a575f3560e01c8063a421d66811610058578063a421d668146100cc578063ac0cbb5a14610107578063f2fde38b1461011a578063fc911f791461012d575f5ffd5b8063715018a61461007e5780638da5cb5b14610088578063912715f5146100a7575b5f5ffd5b610086610140565b005b5f546040516001600160a01b0390911681526020015b60405180910390f35b6100b364e8d4a5100081565b60405167ffffffffffffffff909116815260200161009e565b6100f76100da36600461034f565b6001600160a01b03165f9081526001602052604090205460ff1690565b604051901515815260200161009e565b61008661011536600461036f565b610153565b61008661012836600461034f565b6101b9565b61008661013b3660046103a8565b6101fb565b6101486102a1565b6101515f6102cd565b565b61015b6102a1565b6001600160a01b0382165f81815260016020908152604091829020805460ff191685151590811790915591519182527f3cc9f1ed63c2a4de331f0acb481e70b0fc6727fefa016fc4154974be98596510910160405180910390a25050565b6101c16102a1565b6001600160a01b0381166101ef57604051631e4fbdf760e01b81525f60048201526024015b60405180910390fd5b6101f8816102cd565b50565b806102485760405162461bcd60e51b815260206004820152601560248201527f72656769737472793a20656d7074792070726f6f66000000000000000000000060448201526064016101e6565b335f81815260016020818152604092839020805460ff1916909217909155905164e8d4a5100081528392917f3e3ca04cf494bc20e6393895aff9dc423ba7dc95c235da04156c1a20ee95b27d910160405180910390a350565b5f546001600160a01b031633146101515760405163118cdaa760e01b81523360048201526024016101e6565b5f80546001600160a01b038381167fffffffffffffffffffffffff0000000000000000000000000000000000000000831681178455604051919092169283917f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e09190a35050565b80356001600160a01b038116811461034a575f5ffd5b919050565b5f6020828403121561035f575f5ffd5b61036882610334565b9392505050565b5f5f60408385031215610380575f5ffd5b61038983610334565b91506020830135801515811461039d575f5ffd5b809150509250929050565b5f602082840312156103b8575f5ffd5b503591905056fea164736f6c634300081b000a",
+  "devdoc": {
+    "errors": {
+      "OwnableInvalidOwner(address)": [
+        {
+          "details": "The owner is not a valid owner account. (eg. `address(0)`)"
+        }
+      ],
+      "OwnableUnauthorizedAccount(address)": [
+        {
+          "details": "The caller account is not authorized to perform an operation."
+        }
+      ]
+    },
+    "kind": "dev",
+    "methods": {
+      "owner()": {
+        "details": "Returns the address of the current owner."
+      },
+      "renounceOwnership()": {
+        "details": "Leaves the contract without owner. It will not be possible to call `onlyOwner` functions. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby disabling any functionality that is only available to the owner."
+      },
+      "transferOwnership(address)": {
+        "details": "Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner."
+      }
+    },
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [
+      {
+        "astId": 41144,
+        "contract": "contracts/MockQualifiedInvestorRegistry.sol:MockQualifiedInvestorRegistry",
+        "label": "_owner",
+        "offset": 0,
+        "slot": "0",
+        "type": "t_address"
+      },
+      {
+        "astId": 45099,
+        "contract": "contracts/MockQualifiedInvestorRegistry.sol:MockQualifiedInvestorRegistry",
+        "label": "_qualified",
+        "offset": 0,
+        "slot": "1",
+        "type": "t_mapping(t_address,t_bool)"
+      }
+    ],
+    "types": {
+      "t_address": {
+        "encoding": "inplace",
+        "label": "address",
+        "numberOfBytes": "20"
+      },
+      "t_bool": {
+        "encoding": "inplace",
+        "label": "bool",
+        "numberOfBytes": "1"
+      },
+      "t_mapping(t_address,t_bool)": {
+        "encoding": "mapping",
+        "key": "t_address",
+        "label": "mapping(address => bool)",
+        "numberOfBytes": "32",
+        "value": "t_bool"
+      }
+    }
+  }
+}

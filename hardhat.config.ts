@@ -9,9 +9,14 @@ import { vars } from "hardhat/config";
 
 const MNEMONIC = process.env.MNEMONIC ?? vars.get("MNEMONIC", "test test test test test test test test test test test junk");
 const INFURA_API_KEY = process.env.INFURA_API_KEY ?? vars.get("INFURA_API_KEY", "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz");
+const ALCHEMY_API_KEY = process.env.ALCHEMY_API_KEY ?? vars.get("ALCHEMY_API_KEY", "");
 const DEPLOYER_PRIVATE_KEY_RAW = process.env.DEPLOYER_PRIVATE_KEY ?? vars.get("DEPLOYER_PRIVATE_KEY", "");
 const LOCALHOST_RPC_URL = process.env.LOCALHOST_RPC_URL ?? "http://127.0.0.1:8545";
-const SEPOLIA_RPC_URL = process.env.SEPOLIA_RPC_URL ?? `https://sepolia.infura.io/v3/${INFURA_API_KEY}`;
+const SEPOLIA_RPC_URL =
+  process.env.SEPOLIA_RPC_URL ??
+  (ALCHEMY_API_KEY
+    ? `https://eth-sepolia.g.alchemy.com/v2/${ALCHEMY_API_KEY}`
+    : `https://sepolia.infura.io/v3/${INFURA_API_KEY}`);
 
 const DEPLOYER_PRIVATE_KEY =
   DEPLOYER_PRIVATE_KEY_RAW && DEPLOYER_PRIVATE_KEY_RAW.startsWith("0x")

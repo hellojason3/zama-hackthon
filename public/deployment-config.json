@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-05-11T04:11:48.615Z",
+  "network": "sepolia",
+  "chainId": "11155111",
+  "registryMode": "groth16",
+  "zkAssetThreshold": "1000000000000",
+  "contracts": {
+    "mockUSDC": {
+      "label": "Mock USDC",
+      "envKey": "NEXT_PUBLIC_MOCK_USDC",
+      "artifact": "MockUSDC.json",
+      "address": "0xb4411707981D69d74d71236f6f92465324a60770",
+      "transactionHash": "0xfabafddc0a1b43be508867a7052415ce03f13c0abe8d189a6eee07bc3500640d",
+      "explorerUrl": "https://sepolia.etherscan.io/address/0xb4411707981D69d74d71236f6f92465324a60770"
+    },
+    "cUSDC": {
+      "label": "Confidential USDC",
+      "envKey": "NEXT_PUBLIC_CUSDC",
+      "artifact": "ConfidentialUSDC.json",
+      "address": "0xBa5bb9590208E5841E46a6A3d8890b71081e8F1A",
+      "transactionHash": "0x32abba87869d94e07cce347c3867455e8b4e47d12020eff8ce16b099cfb4e9c5",
+      "explorerUrl": "https://sepolia.etherscan.io/address/0xBa5bb9590208E5841E46a6A3d8890b71081e8F1A"
+    },
+    "registry": {
+      "label": "Qualification Registry",
+      "envKey": "NEXT_PUBLIC_QUALIFICATION_REGISTRY",
+      "artifact": "Groth16QualifiedInvestorRegistry.json",
+      "address": "0xc6728EE4c06D0a79A70fd623Ebf439051409B6df",
+      "transactionHash": "0x60c066304692494d40482654f7624646950b4f1ae2f6c9a1b9b4532f5bc6e069",
+      "explorerUrl": "https://sepolia.etherscan.io/address/0xc6728EE4c06D0a79A70fd623Ebf439051409B6df"
+    },
+    "groth16Verifier": {
+      "label": "Groth16 Verifier",
+      "envKey": "NEXT_PUBLIC_GROTH16_VERIFIER",
+      "artifact": "QualifiedInvestorGroth16Verifier.json",
+      "address": "0x19A144140CCFF8d1FB337EA990a739A81861aDEB",
+      "transactionHash": "0x0726ae34aca3bbb320ae3afcb2fa1c53d6db19f3182d9eb5c8cf0609816d2d92",
+      "explorerUrl": "https://sepolia.etherscan.io/address/0x19A144140CCFF8d1FB337EA990a739A81861aDEB"
+    },
+    "market": {
+      "label": "Yield Product Market",
+      "envKey": "NEXT_PUBLIC_MARKET",
+      "artifact": "YieldProductMarket.json",
+      "address": "0x9d981a5C98Bd2Ed96851Be278aa19EaBC45a4F34",
+      "transactionHash": "0x3851a5685b945da3335b79cb3a9d81ff820a260004af5e80d9e82418e558a6bc",
+      "explorerUrl": "https://sepolia.etherscan.io/address/0x9d981a5C98Bd2Ed96851Be278aa19EaBC45a4F34"
+    },
+    "vault": {
+      "label": "Confidential Yield Vault",
+      "envKey": "NEXT_PUBLIC_VAULT",
+      "artifact": "ConfidentialYieldVault.json",
+      "address": "0x97A608614DcB6E41cB210280Fb1159Ad571bb7bb",
+      "transactionHash": "0xa8c979a622ca1a772ff5b6863fbf3f6e25f6ff1e9b1a71c3aefdf3c61ccdd90c",
+      "explorerUrl": "https://sepolia.etherscan.io/address/0x97A608614DcB6E41cB210280Fb1159Ad571bb7bb"
+    }
+  }
+}

@@ -2,20 +2,20 @@
 pragma solidity ^0.8.27;
 
 import {FHE, ebool, euint64} from "@fhevm/solidity/lib/FHE.sol";
-import {SepoliaConfig} from "@fhevm/solidity/config/ZamaConfig.sol";
-import {IConfidentialFungibleToken} from "@openzeppelin/confidential-contracts/interfaces/IConfidentialFungibleToken.sol";
-import {IConfidentialFungibleTokenReceiver} from "@openzeppelin/confidential-contracts/interfaces/IConfidentialFungibleTokenReceiver.sol";
+import {ZamaEthereumConfig} from "@fhevm/solidity/config/ZamaConfig.sol";
+import {IERC7984} from "@openzeppelin/confidential-contracts/interfaces/IERC7984.sol";
+import {IERC7984Receiver} from "@openzeppelin/confidential-contracts/interfaces/IERC7984Receiver.sol";
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
 import {IQualifiedInvestorRegistry} from "./interfaces/IQualifiedInvestorRegistry.sol";
 import {YieldProductMarket} from "./YieldProductMarket.sol";
 
-contract ConfidentialYieldVault is SepoliaConfig, IConfidentialFungibleTokenReceiver, Ownable, ReentrancyGuard {
+contract ConfidentialYieldVault is ZamaEthereumConfig, IERC7984Receiver, Ownable, ReentrancyGuard {
     uint64 public constant BPS = 10_000;
     uint64 public constant MAX_REWARD_PERIODS = 365;
 
-    IConfidentialFungibleToken public immutable cUSDC;
+    IERC7984 public immutable cUSDC;
     YieldProductMarket public immutable market;
     IQualifiedInvestorRegistry public qualificationRegistry;
 
@@ -36,7 +36,7 @@ contract ConfidentialYieldVault is SepoliaConfig, IConfidentialFungibleTokenRece
     event RewardClaimed(address indexed user, uint256 indexed productId, uint64 claimEvent);
 
     constructor(
-        IConfidentialFungibleToken cUSDC_,
+        IERC7984 cUSDC_,
         YieldProductMarket market_,
         IQualifiedInvestorRegistry qualificationRegistry_
     ) Ownable(msg.sender) {
@@ -82,7 +82,10 @@ contract ConfidentialYieldVault is SepoliaConfig, IConfidentialFungibleTokenRece
         market.recordDeposit(from, productId);
 
         emit EncryptedDeposit(from, productId, totalDepositEvents);
-        return FHE.asEbool(true);
+
+        ebool accepted = FHE.asEbool(true);
+        FHE.allowTransient(accepted, msg.sender);
+        return accepted;
     }
 
     function accrueReward(address user, uint256 productId, uint64 periods) external onlyOwner {

@@ -58,7 +58,7 @@ contract YieldProductMarket is Ownable {
         string calldata category,
         string calldata issuer,
         uint16 aprBps
-    ) external onlyOwner returns (uint256 productId) {
+    ) external returns (uint256 productId) {
         productId = _listProduct(name, category, issuer, aprBps);
     }
 
