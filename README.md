@@ -6,14 +6,15 @@ Privyields is a hackathon dApp for private allocation into yield products. A use
 
 ## Core Flow
 
-1. User connects a Sepolia wallet and selects or issues a public yield product.
+1. User connects a Sepolia wallet.
 2. User generates and submits an Arkworks Groth16 asset-threshold proof: assets >= 1,000,000 USDC.
-3. User mints demo MockUSDC or reuses an existing balance, approves the wrapper, and calls `ConfidentialUSDC.wrap`.
-4. User encrypts the deposit amount with Zama Relayer SDK.
-5. User calls `confidentialTransferAndCall` on cUSDC with the selected product id.
-6. `ConfidentialYieldVault` receives the encrypted amount in its callback and records encrypted principal.
-7. Product publisher publishes APR when needed, then the vault settles encrypted rewards using FHE arithmetic.
-8. User decrypts their own reward through the Zama SDK, claims encrypted cUSDC, and can decrypt the final cUSDC balance plus local balance history.
+3. After qualification, the user selects or issues a public yield product. This gate can later map different asset tiers to different visible products.
+4. User mints demo MockUSDC or reuses an existing balance, approves the wrapper, and calls `ConfidentialUSDC.wrap`.
+5. User encrypts the deposit amount with Zama Relayer SDK.
+6. User calls `confidentialTransferAndCall` on cUSDC with the selected product id.
+7. `ConfidentialYieldVault` receives the encrypted amount in its callback and records encrypted principal.
+8. Product publisher publishes APR when needed, then the vault settles encrypted rewards using FHE arithmetic.
+9. User decrypts their own reward through the Zama SDK, claims encrypted cUSDC, and can decrypt the final cUSDC balance plus local balance history.
 
 ## Contracts
 

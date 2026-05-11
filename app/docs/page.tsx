@@ -29,7 +29,7 @@ const englishSections = [
   {
     title: "Guided Demo Flow",
     body: [
-      "The frontend is a wizard rather than a dense dashboard. The user starts on a product explanation page, connects a Sepolia wallet, selects a product, proves qualification, mints mock USDC, wraps cUSDC, encrypts and deposits, publishes/accrues demo yield, decrypts the reward, claims cUSDC, and finally decrypts the wallet's cUSDC balance.",
+      "The frontend is a wizard rather than a dense dashboard. The user starts on a product explanation page, connects a Sepolia wallet, proves qualification, selects a product, mints mock USDC, wraps cUSDC, encrypts and deposits, publishes/accrues demo yield, decrypts the reward, claims cUSDC, and finally decrypts the wallet's cUSDC balance.",
       "The allocation step uses the Zama Relayer SDK to create an encrypted input for the cUSDC contract and the connected wallet. Addresses are normalized to EIP-55 checksum form before encryption because the SDK validates addresses strictly.",
       "The final balance decrypt reads cUSDC.confidentialBalanceOf(account), asks the wallet to sign a Zama user-decrypt message, and displays the user's own confidential balance."
     ]
@@ -38,7 +38,8 @@ const englishSections = [
     title: "Product Marketplace",
     body: [
       "The default marketplace includes ten demo yield products across T-bills, real estate, staking, mining cashflow, private credit, basis strategies, DeFi credit, compute revenue, equity dividends, and money markets.",
-      "Any wallet can issue a new product from the frontend. Product metadata and APR are public so the marketplace can be discovered and compared, while each user's allocation amount remains encrypted."
+      "Any wallet can issue a new product from the frontend. Product metadata and APR are public so the marketplace can be discovered and compared, while each user's allocation amount remains encrypted.",
+      "In the current demo, every qualified wallet sees the same product list. The qualification gate is intentionally placed before product selection so future versions can show different products for different asset tiers."
     ]
   },
   {
@@ -115,7 +116,7 @@ const chineseSections = [
   {
     title: "向导式 Demo 流程",
     body: [
-      "前端现在是向导式流程，而不是密集控制台。用户从产品说明页开始，连接 Sepolia 钱包，选择产品，证明资格，铸造 mock USDC，包装 cUSDC，加密并存入，发布/结算 demo 收益，解密 reward，提取 cUSDC，最后解密钱包的 cUSDC 余额。",
+      "前端现在是向导式流程，而不是密集控制台。用户从产品说明页开始，连接 Sepolia 钱包，证明资格，选择产品，铸造 mock USDC，包装 cUSDC，加密并存入，发布/结算 demo 收益，解密 reward，提取 cUSDC，最后解密钱包的 cUSDC 余额。",
       "Allocation 步骤会用 Zama Relayer SDK 为 cUSDC 合约和当前钱包生成 encrypted input。由于 SDK 对地址格式校验很严格，前端会先把地址规范化为 EIP-55 checksum 地址。",
       "最后的余额解密会读取 cUSDC.confidentialBalanceOf(account)，让钱包签署 Zama user-decrypt 消息，然后显示用户自己的 confidential balance。"
     ]
@@ -124,7 +125,8 @@ const chineseSections = [
     title: "收益产品市场",
     body: [
       "默认市场包含 10 个 demo 收益产品，包括短期国债、代币化房地产、ETH staking、挖矿现金流、private credit、basis 策略、DeFi lending、GPU compute、股息组合和货币市场。",
-      "任意钱包都可以在前端发行新产品。产品名称、分类、发行方和 APR 是公开的，方便市场发现和比较；每个用户实际配置了多少资金仍然是加密的。"
+      "任意钱包都可以在前端发行新产品。产品名称、分类、发行方和 APR 是公开的，方便市场发现和比较；每个用户实际配置了多少资金仍然是加密的。",
+      "当前 demo 里，所有通过资格验证的钱包看到同一组产品。资格验证被放在产品选择之前，是为了后续可以根据不同资产等级展示不同产品集合。"
     ]
   },
   {

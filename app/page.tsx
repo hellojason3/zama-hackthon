@@ -92,9 +92,11 @@ const COPY = {
       walletTitle: "Connect a wallet to begin",
       walletBody: "The demo uses your wallet to read Sepolia state, submit the qualification proof, and sign each product interaction.",
       productsTitle: "Choose a yield product",
-      productsBody: "These products are public marketplace entries. Your selected amount and later rewards stay confidential.",
+      productsBody:
+        "These products appear after qualification. In this demo the same public list is shown to every qualified wallet; later this gate can map different asset tiers to different product sets.",
       qualifyTitle: "Prove investor qualification",
       qualifyBody: "Generate a local asset-threshold proof and submit it to the registry before allocating capital.",
+      alreadyQualified: "This wallet is already qualified in the registry, so a new proof is not required for this demo run.",
       mintTitle: "Mint demo USDC",
       mintBody:
         "A fresh wallet may not have demo USDC. Mint mock USDC and approve the cUSDC wrapper, or use existing demo USDC if this wallet has already run the flow.",
@@ -288,9 +290,10 @@ const COPY = {
       walletTitle: "先连接钱包",
       walletBody: "Demo 会用你的钱包读取 Sepolia 状态、提交资格证明，并签署每一步产品交互。",
       productsTitle: "选择一个收益产品",
-      productsBody: "这些产品是公开市场条目。你选择投入多少，以及后续收益是多少，都保持 confidential。",
+      productsBody: "这些产品会在资格验证后展示。当前 demo 对所有通过资格的钱包展示同一组公开产品；后续可以根据不同资产等级展示不同产品集合。",
       qualifyTitle: "证明投资人资格",
       qualifyBody: "先在本地生成资产门槛 proof，再提交到 registry，通过后才能配置资金。",
+      alreadyQualified: "这个钱包已经在 registry 中通过资格验证，所以本次 demo 不需要重新提交 proof。",
       mintTitle: "铸造 demo USDC",
       mintBody: "新钱包通常没有 demo USDC。可以铸造 mock USDC 并授权 cUSDC wrapper；如果这个钱包已经跑过流程，也可以直接使用已有 demo USDC。",
       wrapTitle: "包装成 confidential cUSDC",
@@ -747,6 +750,7 @@ export default function Home() {
       const connectedAccount = normalizeAddress(accounts[0] ?? "");
       setAccount(connectedAccount);
       setZkProof(null);
+      setQualified(false);
       setHasMinted(false);
       setHasWrapped(false);
       setHasDeposited(false);
@@ -759,7 +763,7 @@ export default function Home() {
       relayerRef.current = null;
       pushLog(t.logs.connected(shorten(connectedAccount)));
       await readContracts(connectedAccount);
-      setWizardStage("products");
+      setWizardStage("qualify");
     });
 
   const generateQualificationProof = () =>
@@ -805,7 +809,7 @@ export default function Home() {
         const tx = await registry.submitDemoProof(proofCommitment);
         await tx.wait();
         setQualified(true);
-        setWizardStage("mint");
+        setWizardStage("products");
         pushLog(t.logs.demoProofAccepted);
         return;
       }
@@ -820,7 +824,7 @@ export default function Home() {
       );
       await tx.wait();
       setQualified(true);
-      setWizardStage("mint");
+      setWizardStage("products");
       pushLog(t.logs.proofAccepted);
     });
 
@@ -1043,8 +1047,8 @@ export default function Home() {
 
   const wizardFlow: {stage: WizardStage; label: string; done: boolean}[] = [
     {stage: "wallet", label: t.wizard.progress.wallet, done: Boolean(account)},
-    {stage: "products", label: t.wizard.progress.products, done: wizardStage !== "wallet" && Boolean(account)},
     {stage: "qualify", label: t.wizard.progress.qualify, done: qualified},
+    {stage: "products", label: t.wizard.progress.products, done: !["wallet", "qualify", "products"].includes(wizardStage) && Boolean(account) && qualified},
     {stage: "mint", label: t.wizard.progress.mint, done: hasMinted},
     {stage: "wrap", label: t.wizard.progress.wrap, done: hasWrapped},
     {stage: "deposit", label: t.wizard.progress.deposit, done: hasDeposited},
@@ -1056,7 +1060,7 @@ export default function Home() {
   const canOpenWizardStep = (index: number, done: boolean) => wizardStage === "complete" || index <= activeFlowIndex || done;
 
   const goBack = () => {
-    const flow: WizardStage[] = ["wallet", "products", "qualify", "mint", "wrap", "deposit", "yield", "claim", "complete"];
+    const flow: WizardStage[] = ["wallet", "qualify", "products", "mint", "wrap", "deposit", "yield", "claim", "complete"];
     const index = flow.indexOf(wizardStage);
     setWizardStage(index <= 0 ? "intro" : flow[index - 1]);
   };
@@ -1202,8 +1206,8 @@ export default function Home() {
             {selectedSummary}
             <button
               className="primaryButton"
-              onClick={() => setWizardStage(qualified ? (hasMinted ? "wrap" : "mint") : "qualify")}
-              disabled={!account}
+              onClick={() => setWizardStage(hasMinted ? "wrap" : "mint")}
+              disabled={!account || !qualified}
             >
               {t.wizard.chooseProduct}
             </button>
@@ -1220,6 +1224,7 @@ export default function Home() {
           <h2>{t.wizard.qualifyTitle}</h2>
           <p>{t.wizard.qualifyBody}</p>
           <span className={qualified ? "pill good" : "pill"}>{qualified ? t.passed : t.required}</span>
+          {qualified && <p className="wizardBody">{t.wizard.alreadyQualified}</p>}
           {REGISTRY_MODE === "groth16" && !qualified && (
             <>
               <div className="splitInputs">
@@ -1245,7 +1250,7 @@ export default function Home() {
               {t.wizard.back}
             </button>
             {qualified ? (
-              <button className="primaryButton" onClick={() => setWizardStage(hasMinted ? "wrap" : "mint")}>
+              <button className="primaryButton" onClick={() => setWizardStage("products")}>
                 {t.wizard.continue}
               </button>
             ) : (

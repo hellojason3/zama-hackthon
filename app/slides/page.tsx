@@ -22,7 +22,7 @@ const slides = [
   {
     kicker: "Experience",
     title: "A guided demo instead of a dense dashboard",
-    body: "The frontend is now a step-by-step wizard: intro, wallet, product selection, qualification, mint, wrap, allocation, yield, claim, and final cUSDC balance decrypt.",
+    body: "The frontend is now a step-by-step wizard: intro, wallet, qualification, product selection, mint, wrap, allocation, yield, claim, and final cUSDC balance decrypt.",
     points: ["One task per screen", "Visible progress and debug events", "Final proof that the claimed reward reached the confidential balance"]
   },
   {
@@ -34,8 +34,8 @@ const slides = [
   {
     kicker: "Market",
     title: "Public products, private allocation",
-    body: "Any connected wallet can issue a product entry. Product names, categories, issuers, and APR updates are public, while each user's allocation amount remains encrypted.",
-    points: ["Permissionless product issuance", "Public marketplace discovery", "Confidential user position sizes"]
+    body: "Any connected wallet can issue a product entry. Qualified users then browse public product metadata, while each user's allocation amount remains encrypted.",
+    points: ["Permissionless product issuance", "Qualification before product selection", "Ready for tier-gated product sets"]
   },
   {
     kicker: "Live Flow",
