@@ -19,6 +19,7 @@
     "deploy:sepolia": "hardhat deploy --network sepolia",
     "deploy:sepolia:production": "bash scripts/deploy-sepolia-production.sh",
     "deploy:server": "bash scripts/deploy-zama-hackathon.sh",
+    "deploy:video": "bash scripts/deploy-demo-video.sh",
     "write-env:localhost": "node scripts/write-local-env.cjs",
     "smoke:localhost": "hardhat run scripts/local-smoke.ts --network localhost",
     "server:local": "bash scripts/server-local-demo.sh",

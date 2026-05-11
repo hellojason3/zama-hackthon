@@ -9,6 +9,7 @@ tsconfig.tsbuildinfo
 .env
 .env.local
 .env.*.local
+public/privyields-demo.mp4
 deployments/localhost/
 .demo-logs/
 zk/qualified-investor/target/
